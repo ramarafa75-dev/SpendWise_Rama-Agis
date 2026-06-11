@@ -1,6 +1,6 @@
 <x-spendwise title="Tambah Transaksi">
 <style>
-    .form-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1.5rem; max-width: 480px; }
+    .form-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1.5rem; max-width: 500px; margin: 0 auto; box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04); }
     .form-card h2 { font-size: 14px; font-weight: 600; color: #1A2035; margin-bottom: 1.25rem; padding-bottom: 12px; border-bottom: 1px solid #F0F2F8; }
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; font-size: 12px; color: #6B7280; margin-bottom: 5px; font-weight: 500; }

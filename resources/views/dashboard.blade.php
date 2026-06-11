@@ -1,13 +1,13 @@
 <x-spendwise title="Dashboard">
 <style>
     .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 1.5rem; }
-    .stat-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1.1rem 1.25rem; }
+    .stat-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1.1rem 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04); }
     .stat-card-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
     .stat-card-icon svg { width: 18px; height: 18px; }
     .stat-card-label { font-size: 12px; color: #9CA3AF; margin-bottom: 4px; }
     .stat-card-value { font-size: 22px; font-weight: 600; color: #1A2035; }
     .stat-card-sub { font-size: 11px; color: #9CA3AF; margin-top: 4px; }
-    .table-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1.25rem; }
+    .table-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04); }
     .table-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
     .table-card-header h2 { font-size: 14px; font-weight: 600; color: #1A2035; }
     .table-card-header a { font-size: 12px; color: #6C63FF; text-decoration: none; }
@@ -19,6 +19,13 @@
     .badge-in { background: #DCFCE7; color: #166534; }
     .badge-out { background: #FEE2E2; color: #991B1B; }
     .empty-state { text-align: center; padding: 2rem; color: #9CA3AF; font-size: 13px; }
+    .trx-icon {
+        width: 34px; height: 34px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .trx-icon.in  { background: #DCFCE7; }
+    .trx-icon.out { background: #FEE2E2; }
+    .trx-icon svg { width: 16px; height: 16px; }
 </style>
 
 {{-- Stat Cards --}}
@@ -64,6 +71,7 @@
         <table>
             <thead>
                 <tr>
+                    <th></th>
                     <th>Tanggal</th>
                     <th>Kategori</th>
                     <th>Deskripsi</th>
@@ -75,6 +83,21 @@
             <tbody>
                 @foreach($transactions as $trx)
                 <tr>
+                    <td>
+                        @if($trx->type === 'pemasukan')
+                            <div class="trx-icon in">
+                                <svg fill="none" stroke="#16A34A" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M12 19V5M5 12l7-7 7 7"/>
+                                </svg>
+                            </div>
+                        @else
+                            <div class="trx-icon out">
+                                <svg fill="none" stroke="#DC2626" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M12 5v14M19 12l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                        @endif
+                    </td>
                     <td>{{ \Carbon\Carbon::parse($trx->date)->format('d M Y') }}</td>
                     <td>{{ $trx->category->name ?? '-' }}</td>
                     <td style="color:#9CA3AF">{{ $trx->description ?? '-' }}</td>

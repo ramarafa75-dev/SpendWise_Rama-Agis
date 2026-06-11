@@ -5,7 +5,7 @@
     .btn-primary { background: #6C63FF; color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
     .btn-primary:hover { background: #5A52E0; }
 
-    .add-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1.25rem; margin-bottom: 1.25rem; }
+    .add-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1.25rem; margin-bottom: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);}
     .add-card h2 { font-size: 13px; font-weight: 600; color: #1A2035; margin-bottom: 1rem; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
     .form-group label { display: block; font-size: 11px; color: #9CA3AF; margin-bottom: 5px; }
@@ -13,7 +13,7 @@
     .form-group input:focus { border-color: #6C63FF; }
 
     .cat-list { display: flex; flex-direction: column; gap: 10px; }
-    .cat-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; }
+    .cat-card { background: #fff; border-radius: 10px; border: 1px solid #E2E6F0; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04); }
     .cat-left { display: flex; align-items: center; gap: 12px; }
     .cat-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
     .cat-name { font-size: 14px; font-weight: 500; color: #1A2035; margin-bottom: 4px; }
