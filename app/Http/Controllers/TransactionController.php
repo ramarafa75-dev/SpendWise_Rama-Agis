@@ -16,20 +16,28 @@ class TransactionController extends Controller
         $this->exchangeService = $exchangeService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = Transaction::with('category')
-            ->where('user_id', '=', Auth::id(), 'and')
-            ->latest()
-            ->get();
+        $query = Transaction::with('category')
+        ->where('user_id', Auth::id());
 
-        return view('transactions.index', compact('transactions'));
+    if ($request->type) {
+        $query->where('type', $request->type);
+    }
+    if ($request->category_id) {
+        $query->where('category_id', $request->category_id);
+    }
+
+    $transactions = $query->latest('date')->get();
+    $categories   = Category::where('user_id', Auth::id())->get();
+
+    return view('spendwise.transactions.index', compact('transactions', 'categories'));
     }
 
     public function create()
     {
-        $categories = Category::where('user_id', '=', Auth::id(), 'and')->get();
-        return view('transactions.create', compact('categories'));
+        $categories = Category::where('user_id', Auth::id())->get();
+        return view('spendwise.transactions.create', compact('categories'));
     }
 
     public function store(Request $request)

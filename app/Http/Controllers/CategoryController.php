@@ -9,8 +9,13 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('user_id', '=', Auth::id(), 'and')->get();
-        return view('categories.index', compact('categories'));
+        $categories = Category::where('user_id', Auth::id())
+        ->with(['transactions' => function($q) {
+            $q->where('type', 'pengeluaran');
+        }])
+        ->get();
+
+        return view('spendwise.categories.index', compact('categories'));
     }
 
     public function store(Request $request)
