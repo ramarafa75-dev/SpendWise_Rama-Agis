@@ -7,24 +7,24 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Poppins', system-ui, sans-serif;
             font-weight: 600;
             line-height: 1.25;
             letter-spacing: -0.025em;
             color: #0F1623;
         }
         .topbar h1 { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
-        .sidebar-logo span { font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: -0.03em; }
+        .sidebar-logo span { font-family: 'Poppins', sans-serif; font-weight: 700; letter-spacing: -0.03em; }
         .nav-item { font-size: 13px; font-weight: 400; letter-spacing: -0.005em; }
-        .nav-label { font-family: 'Inter', sans-serif; font-weight: 500; letter-spacing: 0.08em; }
+        .nav-label { font-family: 'Poppins', sans-serif; font-weight: 500; letter-spacing: 0.08em; }
         code, pre, .mono { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 12px; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
         display: flex; height: 100vh; overflow: hidden;
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-family: 'Poppins', system-ui, -apple-system, sans-serif;
         font-size: 14px;
         line-height: 1.6;
         letter-spacing: -0.01em;
@@ -54,12 +54,12 @@
         .topbar { background: #fff; border-bottom: 1px solid #E2E6F0; padding: 14px 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
         .topbar h1 { font-size: 15px; font-weight: 600; color: #1A2035; }
         .topbar-right { font-size: 11px; color: #9CA3AF; }
-        .main-content { flex: 1; overflow-y: auto; padding: 1.5rem 1.75rem; background: #EAECF0; }
+        .main-content { flex: 1; overflow-y: auto; padding: 1.5rem 1.75rem; background: #EAECF0; display: flex; flex-direction: column; }
 
         .main-footer {
-            padding: 14px 1.75rem;
+            padding: 14px 1rem;
             border-top: 1px solid #E2E6F0;
-            background: #EAECF0;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -67,6 +67,7 @@
             font-size: 11px;
             color: #9CA3AF;
             flex-shrink: 0;
+            margin-top: 2rem;
         }
         .main-footer a { color: #9CA3AF; text-decoration: none; }
         .main-footer span { color: #D1D5DB; }
@@ -141,18 +142,19 @@
                 ✕ {{ session('error') }}
             </div>
         @endif
-
+    <div style="flex: 1;">
         {{ $slot }}
+    </div>
+        <footer class="main-footer">
+            © {{ date('Y') }} SpendWise
+            <span>|</span>
+            <a href="#">Lisensi</a>
+            <span>|</span>
+            <a href="#">Rama - Agistia</a>
+            <span>|</span>
+            Dibuat dengan Laravel {{ app()->version() }}
+        </footer>
     </main>
-    <footer class="main-footer">
-        © {{ date('Y') }} SpendWise
-        <span>|</span>
-        <a href="#">Lisensi</a>
-        <span>|</span>
-        <a href="#">Rama - Agistia</a>
-        <span>|</span>
-        Dibuat dengan Laravel {{ app()->version() }}
-    </footer>
 </div>
 
 </body>
