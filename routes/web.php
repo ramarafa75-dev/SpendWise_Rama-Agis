@@ -19,9 +19,6 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('categories', CategoryController::class);
     Route::resource('transactions', TransactionController::class);
-        Route::get('/statistik', function () {
-        return view('dashboard-statistik');
-    })->middleware(['auth', 'verified'])->name('statistik');
 
 });
 
