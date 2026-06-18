@@ -49,7 +49,7 @@
         .user-info p { font-size: 12px; font-weight: 500; color: #fff; }
         .user-info span { font-size: 11px; color: #6B7280; }
 
-        /* Main */
+        
         .main-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .topbar { background: #fff; border-bottom: 1px solid #E2E6F0; padding: 14px 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
         .topbar h1 { font-size: 15px; font-weight: 600; color: #1A2035; }
@@ -71,6 +71,8 @@
         }
         .main-footer a { color: #9CA3AF; text-decoration: none; }
         .main-footer span { color: #D1D5DB; }
+    
+
     </style>
 </head>
 <body>
@@ -121,6 +123,8 @@
 <div class="main-wrap">
     <div class="topbar">
         <h1>{{ $title ?? 'Dashboard' }}</h1>
+
+
         <div class="topbar-right">
             {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
             &nbsp;|&nbsp;
@@ -156,6 +160,5 @@
         </footer>
     </main>
 </div>
-
 </body>
 </html>
