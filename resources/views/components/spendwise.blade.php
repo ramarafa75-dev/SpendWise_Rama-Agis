@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,54 +7,191 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            display: flex; height: 100vh; overflow: hidden;
-            font-family: 'Poppins', system-ui, sans-serif;
-            font-size: 13.5px; line-height: 1.6;
-            background: #0D1117;
-            -webkit-font-smoothing: antialiased;
+        /* ══════════════════════════════════
+           CSS VARIABLES — DARK (default)
+        ══════════════════════════════════ */
+        :root, [data-theme="dark"] {
+            --bg-body:      #0D1117;
+            --bg-sidebar:   #161B22;
+            --bg-topbar:    #161B22;
+            --bg-card:      #161B22;
+            --bg-input:     #0D1117;
+            --bg-row:       #0D1117;
+            --bg-hover:     rgba(255,255,255,.02);
+            --border:       #21262D;
+            --text-primary: #E6EDF3;
+            --text-secondary:#8B949E;
+            --text-muted:   #484F58;
+            --accent:       #6C63FF;
+            --success:      #4ADE80;
+            --danger:       #F87171;
+            --warning:      #FBBF24;
+            --badge-in-bg:  rgba(74,222,128,.15);
+            --badge-in-txt: #4ADE80;
+            --badge-out-bg: rgba(248,113,113,.15);
+            --badge-out-txt:#F87171;
+            --icon-in-bg:   rgba(74,222,128,.15);
+            --icon-out-bg:  rgba(248,113,113,.15);
+            --shadow:       0 1px 4px rgba(0,0,0,.4);
+            --nav-active:   rgba(108,99,255,.2);
+            --nav-hover:    rgba(108,99,255,.12);
         }
 
-        /* ── Sidebar ── */
-        .sidebar { width: 220px; background: #161B22; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #21262D; }
-        .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 1.4rem 1.25rem; border-bottom: 1px solid #21262D; }
-        .sidebar-logo-icon { width: 34px; height: 34px; background: #6C63FF; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .sidebar-logo-icon svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
-        .sidebar-logo span { font-size: 15px; font-weight: 700; color: #E6EDF3; letter-spacing: -.3px; }
-        .sidebar-nav { padding: 1rem 0; flex: 1; }
-        .nav-label { font-size: 10px; color: #484F58; text-transform: uppercase; letter-spacing: 1.2px; padding: 0 1.25rem; margin-bottom: 4px; margin-top: 8px; font-weight: 500; }
-        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 1rem; color: #8B949E; font-size: 13px; text-decoration: none; margin: 2px 10px; border-radius: 8px; transition: all .15s; }
-        .nav-item:hover { background: rgba(108,99,255,.12); color: #C4C0FF; }
-        .nav-item.active { background: rgba(108,99,255,.2); color: #fff; }
-        .nav-item svg { width: 17px; height: 17px; flex-shrink: 0; }
-        .sidebar-user { padding: 1rem 1.25rem; border-top: 1px solid #21262D; display: flex; align-items: center; gap: 10px; }
-        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: #6C63FF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; flex-shrink: 0; }
-        .user-info p { font-size: 12px; font-weight: 500; color: #E6EDF3; }
-        .user-info span { font-size: 11px; color: #484F58; }
+        /* ══════════════════════════════════
+           CSS VARIABLES — LIGHT
+        ══════════════════════════════════ */
+        [data-theme="light"] {
+            --bg-body:      #EAECF0;
+            --bg-sidebar:   #1A2035;
+            --bg-topbar:    #ffffff;
+            --bg-card:      #ffffff;
+            --bg-input:     #ffffff;
+            --bg-row:       #F9FAFB;
+            --bg-hover:     #FAFBFF;
+            --border:       #E2E6F0;
+            --text-primary: #1A2035;
+            --text-secondary:#6B7280;
+            --text-muted:   #9CA3AF;
+            --accent:       #6C63FF;
+            --success:      #16A34A;
+            --danger:       #DC2626;
+            --warning:      #F59E0B;
+            --badge-in-bg:  #DCFCE7;
+            --badge-in-txt: #166534;
+            --badge-out-bg: #FEE2E2;
+            --badge-out-txt:#991B1B;
+            --icon-in-bg:   #DCFCE7;
+            --icon-out-bg:  #FEE2E2;
+            --shadow:       0 1px 4px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);
+            --nav-active:   rgba(108,99,255,.18);
+            --nav-hover:    rgba(108,99,255,.1);
+        }
 
-        /* ── Main ── */
-        .main-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .topbar { background: #161B22; border-bottom: 1px solid #21262D; padding: 14px 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-        .topbar h1 { font-size: 15px; font-weight: 600; color: #E6EDF3; }
-        .topbar-right { font-size: 11px; color: #484F58; }
-        .main-content { flex: 1; overflow-y: auto; padding: 1.5rem 1.75rem; background: #0D1117; display: flex; flex-direction: column; }
+        /* ══════════════════════════════════
+           GLOBAL SHARED CSS
+        ══════════════════════════════════ */
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body {
+            display:flex; height:100vh; overflow:hidden;
+            font-family:'Poppins',system-ui,sans-serif;
+            font-size:13.5px; line-height:1.6;
+            background:var(--bg-body);
+            -webkit-font-smoothing:antialiased;
+            transition:background .2s;
+        }
 
-        /* ── Flash messages ── */
-        .flash-success { background: rgba(22,163,74,.12); color: #4ADE80; border: 1px solid rgba(22,163,74,.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 1rem; font-size: 13px; }
-        .flash-error { background: rgba(220,38,38,.12); color: #F87171; border: 1px solid rgba(220,38,38,.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 1rem; font-size: 13px; }
+        /* Shared card */
+        .sw-card {
+            background:var(--bg-card); border-radius:10px;
+            border:1px solid var(--border); box-shadow:var(--shadow);
+        }
 
-        /* ── Footer ── */
-        .main-footer { padding: 14px 1.75rem; border-top: 1px solid #21262D; background: transparent; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; color: #484F58; margin-top: 2rem; }
-        .main-footer a { color: #484F58; text-decoration: none; }
-        .main-footer a:hover { color: #8B949E; }
-        .main-footer span { color: #21262D; }
+        /* Shared table */
+        .sw-table { width:100%; border-collapse:collapse; font-size:13px; }
+        .sw-table thead th { text-align:left; color:var(--text-muted); font-weight:500; padding:0 10px 10px; font-size:11px; border-bottom:1px solid var(--border); }
+        .sw-table tbody td { padding:11px 10px; border-bottom:1px solid var(--border); color:var(--text-secondary); }
+        .sw-table tbody tr:last-child td { border-bottom:none; }
+        .sw-table tbody tr:hover td { background:var(--bg-hover); }
 
-        /* ── Scrollbar ── */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #0D1117; }
-        ::-webkit-scrollbar-thumb { background: #21262D; border-radius: 10px; }
+        /* Shared badge */
+        .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:500; }
+        .badge-in  { background:var(--badge-in-bg);  color:var(--badge-in-txt); }
+        .badge-out { background:var(--badge-out-bg); color:var(--badge-out-txt); }
+
+        /* Shared trx icon */
+        .trx-icon { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .trx-icon.in  { background:var(--icon-in-bg); }
+        .trx-icon.out { background:var(--icon-out-bg); }
+        .trx-icon svg { width:16px; height:16px; }
+
+        /* Shared btn */
+        .btn-primary { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:9px 16px; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-family:'Poppins',sans-serif; font-weight:500; }
+        .btn-primary:hover { opacity:.9; }
+        .btn-secondary { background:transparent; color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; padding:9px 16px; font-size:13px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; font-family:'Poppins',sans-serif; }
+        .btn-secondary:hover { background:var(--bg-hover); }
+        .btn-danger { background:none; border:none; color:var(--danger); font-size:12px; cursor:pointer; padding:4px 8px; border-radius:5px; font-family:'Poppins',sans-serif; }
+        .btn-danger:hover { background:var(--badge-out-bg); }
+
+        /* Shared form */
+        .sw-input, .sw-select {
+            width:100%; background:var(--bg-input); border:1px solid var(--border);
+            border-radius:8px; padding:9px 12px; font-size:13px; color:var(--text-primary);
+            outline:none; font-family:'Poppins',sans-serif; transition:border .15s;
+        }
+        .sw-input:focus, .sw-select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(108,99,255,.12); }
+        .sw-input::placeholder { color:var(--text-muted); }
+        .sw-select option { background:var(--bg-card); color:var(--text-primary); }
+        .sw-label { display:block; font-size:12px; color:var(--text-secondary); margin-bottom:5px; font-weight:500; }
+        .sw-error { font-size:11px; color:var(--danger); margin-top:4px; }
+        .sw-form-group { margin-bottom:1rem; }
+
+        /* Shared empty state */
+        .empty-state { text-align:center; padding:2.5rem; color:var(--text-muted); font-size:13px; }
+
+        /* Flash */
+        .flash-success { background:var(--badge-in-bg); color:var(--badge-in-txt); border:1px solid var(--icon-in-bg); border-radius:8px; padding:10px 14px; margin-bottom:1rem; font-size:13px; }
+        .flash-error { background:var(--badge-out-bg); color:var(--badge-out-txt); border:1px solid var(--icon-out-bg); border-radius:8px; padding:10px 14px; margin-bottom:1rem; font-size:13px; }
+
+        /* ══════════════════════════════════
+           SIDEBAR
+        ══════════════════════════════════ */
+        .sidebar { width:220px; background:var(--bg-sidebar); display:flex; flex-direction:column; flex-shrink:0; border-right:1px solid var(--border); transition:background .2s; }
+        .sidebar-logo { display:flex; align-items:center; gap:10px; padding:1.4rem 1.25rem; border-bottom:1px solid rgba(255,255,255,.06); }
+        .sidebar-logo-icon { width:34px; height:34px; background:#6C63FF; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .sidebar-logo-icon svg { width:18px; height:18px; fill:none; stroke:#fff; stroke-width:2; }
+        .sidebar-logo span { font-size:15px; font-weight:700; color:#E6EDF3; letter-spacing:-.3px; }
+        .sidebar-nav { padding:1rem 0; flex:1; }
+        .nav-label { font-size:10px; color:#4A5568; text-transform:uppercase; letter-spacing:1.2px; padding:0 1.25rem; margin-bottom:4px; margin-top:8px; font-weight:500; }
+        .nav-item { display:flex; align-items:center; gap:10px; padding:9px 1rem; color:#8892A4; font-size:13px; text-decoration:none; margin:2px 10px; border-radius:8px; transition:all .15s; }
+        .nav-item:hover { background:var(--nav-hover); color:#C4C0FF; }
+        .nav-item.active { background:var(--nav-active); color:#fff; }
+        .nav-item svg { width:17px; height:17px; flex-shrink:0; }
+        .sidebar-user { padding:1rem 1.25rem; border-top:1px solid rgba(255,255,255,.06); display:flex; align-items:center; gap:10px; }
+        .user-avatar { width:34px; height:34px; border-radius:50%; background:#6C63FF; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#fff; flex-shrink:0; }
+        .user-info p { font-size:12px; font-weight:500; color:#E6EDF3; }
+        .user-info span { font-size:11px; color:#484F58; }
+
+        /* ══════════════════════════════════
+           MAIN
+        ══════════════════════════════════ */
+        .main-wrap { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+        .topbar { background:var(--bg-topbar); border-bottom:1px solid var(--border); padding:14px 1.75rem; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; transition:background .2s; }
+        .topbar h1 { font-size:15px; font-weight:600; color:var(--text-primary); }
+        .topbar-right { display:flex; align-items:center; gap:10px; font-size:11px; color:var(--text-muted); }
+        .main-content { flex:1; overflow-y:auto; padding:1.5rem 1.75rem; background:var(--bg-body); display:flex; flex-direction:column; transition:background .2s; }
+        .main-footer { padding:14px 1.75rem; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:8px; font-size:11px; color:var(--text-muted); margin-top:2rem; }
+        .main-footer a { color:var(--text-muted); text-decoration:none; }
+        .main-footer a:hover { color:var(--text-secondary); }
+        .main-footer span { color:var(--border); }
+
+        /* ══════════════════════════════════
+           THEME TOGGLE BUTTON
+        ══════════════════════════════════ */
+        .theme-toggle {
+            width:34px; height:34px; border-radius:8px; border:1px solid var(--border);
+            background:var(--bg-card); cursor:pointer; display:flex; align-items:center;
+            justify-content:center; transition:all .2s; flex-shrink:0;
+        }
+        .theme-toggle:hover { border-color:var(--accent); background:var(--bg-hover); }
+        .theme-toggle svg { width:16px; height:16px; }
+        .icon-sun { display:none; }
+        .icon-moon { display:block; }
+        [data-theme="light"] .icon-sun { display:block; }
+        [data-theme="light"] .icon-moon { display:none; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width:5px; }
+        ::-webkit-scrollbar-track { background:var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
     </style>
+
+    {{-- Terapkan tema SEBELUM render untuk cegah flash --}}
+    <script>
+        (function() {
+            const t = localStorage.getItem('sw-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
 </head>
 <body>
 
@@ -107,7 +244,20 @@
         <div class="topbar-right">
             {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
             &nbsp;|&nbsp;
-            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color:#F87171;text-decoration:none;">Keluar</a>
+            {{-- TOGGLE BUTTON --}}
+            <button class="theme-toggle" onclick="toggleTheme()" title="Ganti tema">
+                {{-- Moon icon (tampil di dark mode) --}}
+                <svg class="icon-moon" fill="none" stroke="#8B949E" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>
+                </svg>
+                {{-- Sun icon (tampil di light mode) --}}
+                <svg class="icon-sun" fill="none" stroke="#6B7280" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+            </button>
+            &nbsp;|&nbsp;
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color:#EF4444;text-decoration:none;">Keluar</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none">@csrf</form>
         </div>
     </div>
@@ -131,5 +281,14 @@
     </main>
 </div>
 
+<script>
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('sw-theme', next);
+    document.dispatchEvent(new Event('themeChanged'));
+}
+</script>
 </body>
 </html>
