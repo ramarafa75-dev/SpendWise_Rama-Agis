@@ -183,6 +183,47 @@
         ::-webkit-scrollbar { width:5px; }
         ::-webkit-scrollbar-track { background:var(--bg-body); }
         ::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
+
+        /* ══════════════════════════════════
+           TOP LOADING BAR
+        ══════════════════════════════════ */
+        #sw-loadbar { position:fixed; top:0; left:0; height:3px; width:0%; background:linear-gradient(90deg,#6C63FF,#9C8CFF,#6C63FF); z-index:99999; opacity:0; box-shadow:0 0 10px rgba(108,99,255,.7); transition:width .4s cubic-bezier(.16,.84,.44,1), opacity .25s ease; }
+        #sw-loadbar.is-active { opacity:1; }
+        #sw-loadbar.is-loading { width:78%; }
+
+        /* ══════════════════════════════════
+           PAGE ENTRANCE ANIMATION (tiap load halaman)
+        ══════════════════════════════════ */
+        @keyframes swFadeDown { from{opacity:0; transform:translateY(-14px);} to{opacity:1; transform:translateY(0);} }
+        @keyframes swFadeLeft { from{opacity:0; transform:translateX(-24px);} to{opacity:1; transform:translateX(0);} }
+        @keyframes swFadeUp   { from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+
+        .sidebar      { animation:swFadeLeft .55s cubic-bezier(.16,.84,.44,1) both; }
+        .topbar       { animation:swFadeDown .5s  cubic-bezier(.16,.84,.44,1) both; }
+        .main-content { animation:swFadeUp   .55s cubic-bezier(.16,.84,.44,1) .08s both; }
+        .nav-item     { opacity:0; animation:swFadeLeft .45s cubic-bezier(.16,.84,.44,1) both; }
+        .nav-item:nth-of-type(1){ animation-delay:.10s }
+        .nav-item:nth-of-type(2){ animation-delay:.15s }
+        .nav-item:nth-of-type(3){ animation-delay:.20s }
+        .nav-item:nth-of-type(4){ animation-delay:.25s }
+        .nav-item:nth-of-type(5){ animation-delay:.30s }
+
+        /* ══════════════════════════════════
+           SCROLL REVEAL (turun ke bawah / geser kiri-kanan)
+        ══════════════════════════════════ */
+        [data-reveal] {
+            opacity:0; transition:opacity .65s cubic-bezier(.16,.84,.44,1), transform .65s cubic-bezier(.16,.84,.44,1);
+            transition-delay:var(--reveal-delay,0ms); will-change:opacity,transform;
+        }
+        [data-reveal="up"]    { transform:translateY(32px); }
+        [data-reveal="left"]  { transform:translateX(-38px); }
+        [data-reveal="right"] { transform:translateX(38px); }
+        [data-reveal="row"]   { transform:translateY(10px); }
+        [data-reveal].is-visible { opacity:1; transform:none; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sidebar, .topbar, .main-content, .nav-item, [data-reveal] { animation:none !important; transition:none !important; opacity:1 !important; transform:none !important; }
+        }
     </style>
 
     {{-- Terapkan tema SEBELUM render untuk cegah flash --}}
@@ -194,6 +235,8 @@
     </script>
 </head>
 <body>
+
+<div id="sw-loadbar"></div>
 
 <aside class="sidebar">
     <div class="sidebar-logo">
@@ -291,6 +334,66 @@ function toggleTheme() {
     localStorage.setItem('sw-theme', next);
     document.dispatchEvent(new Event('themeChanged'));
 }
+
+(function() {
+    /* ===== TOP LOADING BAR — muncul saat pindah halaman ===== */
+    const bar = document.getElementById('sw-loadbar');
+    function startBar() {
+        bar.classList.add('is-active');
+        requestAnimationFrame(() => bar.classList.add('is-loading'));
+    }
+    document.addEventListener('click', function(e) {
+        const a = e.target.closest('a[href]');
+        if (!a) return;
+        const href = a.getAttribute('href') || '';
+        if (href.startsWith('#') || href.startsWith('javascript:')) return;
+        if (a.target === '_blank' || a.hasAttribute('download')) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+        startBar();
+    });
+    document.addEventListener('submit', function() { startBar(); });
+
+    /* ===== SCROLL REVEAL — konten muncul turun / geser kiri-kanan saat di-scroll ===== */
+    function setupReveal() {
+        const groups = [
+            { sel: '.stats-grid > *',                              dir: i => ['left', 'up', 'right'][i % 3] },
+            { sel: '.charts-grid > *',                              dir: i => (i % 2 === 0 ? 'left' : 'right') },
+            { sel: '.budget-item',                                  dir: i => (i % 2 === 0 ? 'left' : 'right') },
+            { sel: '.cat-card',                                     dir: i => (i % 2 === 0 ? 'left' : 'right') },
+            { sel: '.alert-boros, .info-box',                       dir: () => 'up' },
+            { sel: '.table-wrap, .table-card, .form-card, .add-card, .chart-card', dir: () => 'up' },
+        ];
+        groups.forEach(({ sel, dir }) => {
+            document.querySelectorAll(sel).forEach((el, i) => {
+                if (el.hasAttribute('data-reveal')) return;
+                el.setAttribute('data-reveal', dir(i));
+                el.style.setProperty('--reveal-delay', Math.min(i * 70, 420) + 'ms');
+            });
+        });
+        document.querySelectorAll('.sw-table tbody tr').forEach((tr, i) => {
+            if (tr.hasAttribute('data-reveal')) return;
+            tr.setAttribute('data-reveal', 'row');
+            tr.style.setProperty('--reveal-delay', Math.min(i * 50, 400) + 'ms');
+        });
+
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+        document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach((el) => obs.observe(el));
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupReveal);
+    } else {
+        setupReveal();
+    }
+})();
 </script>
 </body>
 </html>
