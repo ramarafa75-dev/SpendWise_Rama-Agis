@@ -146,7 +146,18 @@
         .nav-item:hover { background:var(--nav-hover); color:#C4C0FF; }
         .nav-item.active { background:var(--nav-active); color:#fff; }
         .nav-item svg { width:17px; height:17px; flex-shrink:0; }
-        .sidebar-user { padding:1rem 1.25rem; border-top:1px solid rgba(255,255,255,.06); display:flex; align-items:center; gap:10px; }
+       .sidebar-user {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(255,255,255,.06);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background .15s;
+    border-radius: 0;
+}
+        .sidebar-user:hover {
+    background: rgba(108,99,255,.12);
+}
         .user-avatar { width:34px; height:34px; border-radius:50%; background:#6C63FF; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#fff; flex-shrink:0; }
         .user-info p { font-size:12px; font-weight:500; color:#E6EDF3; }
         .user-info span { font-size:11px; color:#484F58; }
@@ -272,8 +283,13 @@
         @endif
     </nav>
 
-    <div class="sidebar-user">
+   <a href="{{ route('profile') }}" class="sidebar-user" style="text-decoration:none; cursor:pointer;">
+    @if(auth()->user()->avatar)
+        <img src="{{ asset('storage/'.auth()->user()->avatar) }}"
+             style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #6C63FF;">
+    @else
         <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
+    @endif
         <div class="user-info">
             <p>{{ auth()->user()->name }}</p>
             <span>{{ auth()->user()->email }}</span>
