@@ -29,7 +29,7 @@
             50% { transform:translate(20px,-25px) scale(1.08); }
         }
 
-        .page-wrap { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:100%; max-width:420px; }
+        .page-wrap { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:100%; max-width:420px; perspective:1700px; }
 
         /* ── BRAND / LOGO BLOCK ── */
         .brand-block {
@@ -82,9 +82,23 @@
             backdrop-filter:blur(20px);
             border-radius:22px; padding:2.25rem 2rem 2rem;
             box-shadow:0 30px 70px rgba(30,15,70,.35);
-            opacity:0; animation:cardPop .55s cubic-bezier(.16,.84,.44,1) .18s forwards;
+            opacity:0; transform-style:preserve-3d; backface-visibility:hidden;
+            animation:cardFlipIn .6s cubic-bezier(.22,.61,.36,1) .18s forwards;
         }
-        @keyframes cardPop { from{opacity:0; transform:translateY(22px) scale(.97);} to{opacity:1; transform:translateY(0) scale(1);} }
+        /* Kartu "dibalik" masuk saat halaman terbuka */
+        @keyframes cardFlipIn {
+            0%   { opacity:0; transform:rotateY(-110deg) scale(.92); }
+            60%  { opacity:1; }
+            100% { opacity:1; transform:rotateY(0deg) scale(1); }
+        }
+        /* Kartu "dibalik" keluar saat pindah ke login/register lain */
+        .auth-card.flip-out {
+            animation:cardFlipOut .42s cubic-bezier(.4,0,.2,1) forwards !important;
+        }
+        @keyframes cardFlipOut {
+            0%   { opacity:1; transform:rotateY(0deg) scale(1); }
+            100% { opacity:0; transform:rotateY(110deg) scale(.92); }
+        }
         @keyframes fadeSlideDown { from{opacity:0; transform:translateY(-16px);} to{opacity:1; transform:translateY(0);} }
 
         .card-title { font-size:23px; font-weight:700; color:#1A1B2E; text-align:center; margin-bottom:4px; letter-spacing:-.4px; }
@@ -159,7 +173,7 @@
         .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
         @media (prefers-reduced-motion: reduce) {
-            .brand-block,.auth-card,.anim-field,.page-footer,.blob,.wallet-badge,.coin { animation:none !important; opacity:1 !important; transform:none !important; }
+            .brand-block,.auth-card,.auth-card.flip-out,.anim-field,.page-footer,.blob,.wallet-badge,.coin { animation:none !important; opacity:1 !important; transform:none !important; }
         }
     </style>
 </head>
@@ -257,7 +271,7 @@
 
             @if (Route::has('register'))
                 <div class="register-link anim-field af-6">
-                    Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
+                    Belum punya akun? <a href="{{ route('register') }}" class="js-flip-link">Daftar sekarang</a>
                 </div>
             @endif
         </form>
@@ -290,6 +304,22 @@ function showToast(msg) {
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
+
+/* ── Animasi kartu dibalik saat pindah login <-> register ── */
+(function() {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.js-flip-link').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            const card = document.querySelector('.auth-card');
+            const href = this.getAttribute('href');
+            if (!card || reduceMotion) return; // biarkan navigasi normal
+            e.preventDefault();
+            if (card.classList.contains('flip-out')) return; // cegah klik ganda
+            card.classList.add('flip-out');
+            setTimeout(function () { window.location.href = href; }, 380);
+        });
+    });
+})();
 </script>
 </body>
 </html>

@@ -28,7 +28,7 @@
             50% { transform:translate(20px,-25px) scale(1.08); }
         }
 
-        .page-wrap { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:100%; max-width:440px; }
+        .page-wrap { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:100%; max-width:440px; perspective:1700px; }
 
         .brand-block {
             display:flex; flex-direction:column; align-items:center; margin-bottom:1.6rem;
@@ -78,9 +78,21 @@
             backdrop-filter:blur(20px);
             border-radius:22px; padding:2.25rem 2rem 2rem;
             box-shadow:0 30px 70px rgba(30,15,70,.35);
-            opacity:0; animation:cardPop .55s cubic-bezier(.16,.84,.44,1) .18s forwards;
+            opacity:0; transform-style:preserve-3d; backface-visibility:hidden;
+            animation:cardFlipIn .6s cubic-bezier(.22,.61,.36,1) .18s forwards;
         }
-        @keyframes cardPop { from{opacity:0; transform:translateY(22px) scale(.97);} to{opacity:1; transform:translateY(0) scale(1);} }
+        @keyframes cardFlipIn {
+            0%   { opacity:0; transform:rotateY(-110deg) scale(.92); }
+            60%  { opacity:1; }
+            100% { opacity:1; transform:rotateY(0deg) scale(1); }
+        }
+        .auth-card.flip-out {
+            animation:cardFlipOut .42s cubic-bezier(.4,0,.2,1) forwards !important;
+        }
+        @keyframes cardFlipOut {
+            0%   { opacity:1; transform:rotateY(0deg) scale(1); }
+            100% { opacity:0; transform:rotateY(110deg) scale(.92); }
+        }
         @keyframes fadeSlideDown { from{opacity:0; transform:translateY(-16px);} to{opacity:1; transform:translateY(0);} }
 
         .card-title { font-size:22px; font-weight:700; color:#1A1B2E; text-align:center; margin-bottom:4px; letter-spacing:-.4px; }
