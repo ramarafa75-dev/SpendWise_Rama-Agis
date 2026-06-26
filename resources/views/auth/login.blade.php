@@ -15,14 +15,14 @@
             min-height:100vh;
             display:flex; align-items:center; justify-content:center;
             padding:2.5rem 1.5rem;
-            background:linear-gradient(135deg,#5B6FE8 0%,#7C6FE0 35%,#8B5FC8 65%,#6A4FB8 100%);
+            background:linear-gradient(180deg,#1B4F8C 0%,#2E72B5 35%,#4F9BD4 65%,#8FD0F5 100%);
             position:relative; overflow-x:hidden;
         }
 
         /* ── Ambient blurred blobs ── */
         .blob { position:fixed; border-radius:50%; filter:blur(60px); pointer-events:none; z-index:0; }
         .blob-1 { width:380px; height:380px; top:-100px; left:-100px; background:rgba(255,255,255,.12); animation:floatBlob 9s ease-in-out infinite; }
-        .blob-2 { width:420px; height:420px; bottom:-140px; right:-120px; background:rgba(108,99,255,.18); animation:floatBlob 11s ease-in-out infinite reverse; }
+        .blob-2 { width:420px; height:420px; bottom:-140px; right:-120px; background:rgba(60,140,220,.18); animation:floatBlob 11s ease-in-out infinite reverse; }
         .blob-3 { width:260px; height:260px; top:40%; right:10%; background:rgba(255,255,255,.08); animation:floatBlob 7.5s ease-in-out infinite; }
         @keyframes floatBlob {
             0%,100% { transform:translate(0,0) scale(1); }
@@ -39,17 +39,17 @@
         .wallet-logo { position:relative; width:84px; height:84px; margin-bottom:14px; }
         .wallet-badge {
             width:84px; height:84px; border-radius:24px;
-            background:linear-gradient(145deg,#7C9BFF,#6C63FF 55%,#9B6FFF);
+            background:linear-gradient(145deg,#4FA8E8,#2E72B5 55%,#1B4F8C);
             display:flex; align-items:center; justify-content:center;
-            box-shadow:0 12px 30px rgba(40,20,90,.35), inset 0 1px 0 rgba(255,255,255,.25);
+            box-shadow:0 12px 30px rgba(20,45,90,.35), inset 0 1px 0 rgba(255,255,255,.25);
             animation:walletPulse 2.4s ease-in-out infinite;
             position:relative; overflow:visible;
         }
         .wallet-badge svg { width:42px; height:42px; }
         @keyframes walletPulse {
-            0%,55% { box-shadow:0 12px 30px rgba(40,20,90,.35), inset 0 1px 0 rgba(255,255,255,.25); }
-            65% { box-shadow:0 12px 30px rgba(40,20,90,.35), inset 0 1px 0 rgba(255,255,255,.25), 0 0 0 10px rgba(255,214,107,.18); }
-            75%,100% { box-shadow:0 12px 30px rgba(40,20,90,.35), inset 0 1px 0 rgba(255,255,255,.25); }
+            0%,55% { box-shadow:0 12px 30px rgba(20,45,90,.35), inset 0 1px 0 rgba(255,255,255,.25); }
+            65% { box-shadow:0 12px 30px rgba(20,45,90,.35), inset 0 1px 0 rgba(255,255,255,.25), 0 0 0 10px rgba(255,214,107,.18); }
+            75%,100% { box-shadow:0 12px 30px rgba(20,45,90,.35), inset 0 1px 0 rgba(255,255,255,.25); }
         }
         /* Falling coins — uang masuk ke dompet */
         .coin {
@@ -133,13 +133,13 @@
         .forgot-link:hover { text-decoration:underline; }
 
         .btn-login {
-            width:100%; background:linear-gradient(120deg,#6C63FF,#5B8DEF 60%,#4FC3D9);
+            width:100%; background:linear-gradient(120deg,#1B4F8C,#2E72B5 55%,#4FA8E8);
             color:#fff; border:none; border-radius:11px;
             padding:12.5px; font-size:14px; font-weight:600; cursor:pointer;
             font-family:'Poppins',sans-serif; transition:all .2s;
             display:flex; align-items:center; justify-content:center; gap:8px;
         }
-        .btn-login:hover { box-shadow:0 8px 22px rgba(108,99,255,.45); transform:translateY(-1px); }
+        .btn-login:hover { box-shadow:0 8px 22px rgba(46,114,181,.45); transform:translateY(-1px); }
         .btn-login:active { transform:translateY(0); }
         .btn-login svg { width:16px; height:16px; }
 
