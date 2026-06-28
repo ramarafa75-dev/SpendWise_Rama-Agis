@@ -78,6 +78,7 @@
             background:var(--bg-body);
             -webkit-font-smoothing:antialiased;
             transition:background .2s;
+            position:relative;
         }
 
         /* Shared card */
@@ -135,41 +136,109 @@
         /* ══════════════════════════════════
            SIDEBAR
         ══════════════════════════════════ */
-        .sidebar { width:220px; background:var(--bg-sidebar); display:flex; flex-direction:column; flex-shrink:0; border-right:1px solid var(--border); transition:background .2s; }
-        .sidebar-logo { display:flex; align-items:center; gap:10px; padding:1.4rem 1.25rem; border-bottom:1px solid rgba(255,255,255,.06); }
-        .sidebar-logo-icon { width:34px; height:34px; background:#6C63FF; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-        .sidebar-logo-icon svg { width:18px; height:18px; fill:none; stroke:#fff; stroke-width:2; }
-        .sidebar-logo span { font-size:15px; font-weight:700; color:#E6EDF3; letter-spacing:-.3px; }
-        .sidebar-nav { padding:1rem 0; flex:1; }
-        .nav-label { font-size:10px; color:#4A5568; text-transform:uppercase; letter-spacing:1.2px; padding:0 1.25rem; margin-bottom:4px; margin-top:8px; font-weight:500; }
-        .nav-item { display:flex; align-items:center; gap:10px; padding:9px 1rem; color:#8892A4; font-size:13px; text-decoration:none; margin:2px 10px; border-radius:8px; transition:all .15s; }
-        .nav-item:hover { background:var(--nav-hover); color:#C4C0FF; }
-        .nav-item.active { background:var(--nav-active); color:#fff; }
-        .nav-item svg { width:17px; height:17px; flex-shrink:0; }
-       .sidebar-user {
-    padding: 1rem 1.25rem;
-    border-top: 1px solid rgba(255,255,255,.06);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background .15s;
-    border-radius: 0;
-}
-        .sidebar-user:hover {
-    background: rgba(108,99,255,.12);
-}
-        .user-avatar { width:34px; height:34px; border-radius:50%; background:#6C63FF; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#fff; flex-shrink:0; }
-        .user-info p { font-size:12px; font-weight:500; color:#E6EDF3; }
-        .user-info span { font-size:11px; color:#484F58; }
+        .sidebar-wrap {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+        .sidebar {
+            width: 52px;
+            background: #ffffff60;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 20px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 8px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+            height: auto;
+            overflow: visible;
+            padding: 12px 0;
+            gap: 2px;
+            opacity: 0.8;
+            transition: opacity .25s;
+        }
+        .sidebar:hover { opacity: 1;}
+        /* Logo */
+        .sidebar-logo {
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 0 12px;
+            border-bottom: 1px solid #F0F0F0;
+            width: 100%; margin-bottom: 6px;
+        }
+        .sidebar-logo-icon {
+            width: 32px; height: 32px;
+            background: #6C63FF; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .sidebar-logo-icon svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2; }
+        .sidebar-logo span { display: none; }
+        /* Nav */
+        .sidebar-nav {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 2px;
+            width: 100%; padding: 0 8px;
+        }
+        .nav-label { display: none; }
+        .nav-item {
+            display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px;
+            color: #9CA3AF;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all .15s;
+            position: relative;
+        }
+        .nav-item:hover { background: #F3F4F6; color: #6C63FF; }
+        .nav-item.active { background: #EEF2FF; color: #6C63FF; }
+        .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+        /* Tooltip saat hover */
+        .nav-item::after {
+            content: attr(data-tooltip);
+            position: absolute; left: calc(100% + 14px);
+            background: #1A2035; color: #fff;
+            font-size: 11px; font-weight: 500;
+            padding: 5px 10px; border-radius: 7px;
+            white-space: nowrap; pointer-events: none;
+            opacity: 0; transform: translateX(-6px);
+            transition: all .15s;
+            z-index: 999;
+            font-family: 'Poppins', sans-serif;
+        }
+        .nav-item:hover::after { opacity:1; transform:translateX(0); }
+        /* Divider sebelum profile */
+        .sidebar-divider {
+            width: 32px; height: 1px;
+            background: #F0F0F0;
+            margin: 4px 0;
+        }
 
         /* ══════════════════════════════════
            MAIN
         ══════════════════════════════════ */
-        .main-wrap { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-        .topbar { background:var(--bg-topbar); border-bottom:1px solid var(--border); padding:14px 1.75rem; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; transition:background .2s; }
+        .main-wrap { flex:1; display:flex; flex-direction:column; overflow:hidden; background:var(--bg-body);}
+        /* Floating Topbar */
+        .topbar-wrap { padding:14px 1.5rem 0; background:var(--bg-body); flex-shrink:0; transition:background .2s; }
+        .topbar {
+            background:var(--bg-topbar);
+            border:1px solid var(--border);
+            border-radius:14px;
+            padding:12px 1.25rem;
+            display:flex; align-items:center; justify-content:space-between;
+            box-shadow:0 4px 20px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+            transition:all .2s;
+        }
         .topbar h1 { font-size:15px; font-weight:600; color:var(--text-primary); }
         .topbar-right { display:flex; align-items:center; gap:10px; font-size:11px; color:var(--text-muted); }
-        .main-content { flex:1; overflow-y:auto; padding:1.5rem 1.75rem; background:var(--bg-body); display:flex; flex-direction:column; transition:background .2s; }
+        .main-content { flex:1; overflow-y:auto; padding:1rem 1.5rem 1.5rem; background:var(--bg-body); display:flex; flex-direction:column; transition:background .2s; }
+
+        /* Floating Profile di topbar */
+        .topbar-profile { display:flex; align-items:center; gap:8px; text-decoration:none; background:var(--bg-row); border:1px solid var(--border); border-radius:30px; padding:5px 12px 5px 5px; transition:all .15s; }
+        .topbar-profile:hover { border-color:var(--accent); }
+        .topbar-avatar { width:28px; height:28px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0; overflow:hidden; }
+        .topbar-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+        .topbar-profile-name { font-size:12px; font-weight:500; color:var(--text-primary); }
         .main-footer { padding:14px 1.75rem; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:8px; font-size:11px; color:var(--text-muted); margin-top:2rem; }
         .main-footer a { color:var(--text-muted); text-decoration:none; }
         .main-footer a:hover { color:var(--text-secondary); }
@@ -248,78 +317,89 @@
 <body>
 
 <div id="sw-loadbar"></div>
-
+<div class="sidebar-wrap">
 <aside class="sidebar">
     <div class="sidebar-logo">
         <div class="sidebar-logo-icon">
             <svg viewBox="0 0 24 24"><path d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h7"/><path d="M3 10h18M7 15h2M7 12h2"/><circle cx="18" cy="18" r="3"/><path d="M18 16v2l1 1"/></svg>
         </div>
-        <span>SpendWise</span>
     </div>
 
     <nav class="sidebar-nav">
-        <div class="nav-label">Menu</div>
-        <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+        <a href="{{ route('dashboard') }}"
+           class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+           data-tooltip="Dashboard">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            Dashboard
         </a>
-        <a href="{{ route('categories.index') }}" class="nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+
+        <a href="{{ route('categories.index') }}"
+           class="nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}"
+           data-tooltip="Kategori">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1"/></svg>
-            Kategori
         </a>
-        <a href="{{ route('transactions.index') }}" class="nav-item {{ request()->routeIs('transactions.index') ? 'active' : '' }}">
+
+        <a href="{{ route('transactions.index') }}"
+           class="nav-item {{ request()->routeIs('transactions.index') ? 'active' : '' }}"
+           data-tooltip="Transaksi">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
-            Transaksi
         </a>
-        <a href="{{ route('transactions.create') }}" class="nav-item {{ request()->routeIs('transactions.create') ? 'active' : '' }}">
+
+        <a href="{{ route('transactions.create') }}"
+           class="nav-item {{ request()->routeIs('transactions.create') ? 'active' : '' }}"
+           data-tooltip="Tambah Transaksi">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-            Tambah Transaksi
         </a>
+
         @if(Route::has('laporan'))
-        <a href="{{ route('laporan') }}" class="nav-item {{ request()->routeIs('laporan') ? 'active' : '' }}">
+        <a href="{{ route('laporan') }}"
+           class="nav-item {{ request()->routeIs('laporan') ? 'active' : '' }}"
+           data-tooltip="Laporan">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            Laporan
         </a>
         @endif
     </nav>
-
-   <a href="{{ route('profile') }}" class="sidebar-user" style="text-decoration:none; cursor:pointer;">
-    @if(auth()->user()->avatar)
-        <img src="{{ asset('storage/'.auth()->user()->avatar) }}"
-             style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #6C63FF;">
-    @else
-        <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
-    @endif
-        <div class="user-info">
-            <p>{{ auth()->user()->name }}</p>
-            <span>{{ auth()->user()->email }}</span>
-        </div>
-    </div>
 </aside>
+</div>
 
 <div class="main-wrap">
-    <div class="topbar">
-        <h1>{{ $title ?? 'Dashboard' }}</h1>
+    <div class="topbar-wrap">
+        <div class="topbar">
+            <h1>{{ $title ?? 'Dashboard' }}</h1>
+            <div class="topbar-right">
+                {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+                &nbsp;|&nbsp;
 
+                {{-- Theme Toggle --}}
+                <button class="theme-toggle" onclick="toggleTheme()" title="Ganti tema">
+                    <svg class="icon-moon" fill="none" stroke="#8B949E" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>
+                    </svg>
+                    <svg class="icon-sun" fill="none" stroke="#6B7280" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                </button>
 
-        <div class="topbar-right">
-            {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
-            &nbsp;|&nbsp;
-            {{-- TOGGLE BUTTON --}}
-            <button class="theme-toggle" onclick="toggleTheme()" title="Ganti tema">
-                {{-- Moon icon (tampil di dark mode) --}}
-                <svg class="icon-moon" fill="none" stroke="#8B949E" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>
-                </svg>
-                {{-- Sun icon (tampil di light mode) --}}
-                <svg class="icon-sun" fill="none" stroke="#6B7280" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="5"/>
-                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                </svg>
-            </button>
-            &nbsp;|&nbsp;
-            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color:#EF4444;text-decoration:none;">Keluar</a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none">@csrf</form>
+                &nbsp;|&nbsp;
+
+                {{-- Floating Profile --}}
+                <a href="{{ route('profile') }}" class="topbar-profile">
+                    <div class="topbar-avatar">
+                        @if(auth()->user()->avatar)
+                            <img src="{{ asset('storage/'.auth()->user()->avatar) }}" alt="avatar">
+                        @else
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        @endif
+                    </div>
+                    <span class="topbar-profile-name">{{ auth()->user()->name }}</span>
+                </a>
+
+                &nbsp;|&nbsp;
+                <a href="{{ route('logout') }}"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                   style="color:#EF4444;text-decoration:none;">Keluar</a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none">@csrf</form>
+            </div>
         </div>
     </div>
 
