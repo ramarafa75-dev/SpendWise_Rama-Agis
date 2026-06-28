@@ -118,18 +118,18 @@
             outline:none; transition:all .15s; font-family:'Poppins',sans-serif;
             background:#F8F8FB;
         }
-        .form-input:focus { border-color:#6C63FF; background:#fff; box-shadow:0 0 0 4px rgba(108,99,255,.12); }
+        .form-input:focus { border-color:#1B4F8C; background:#fff; box-shadow:0 0 0 4px rgba(27, 79, 140, 0.12); }
         .form-input::placeholder { color:#AEB2C2; }
 
         .input-wrap { position:relative; }
         .input-wrap .toggle-pw { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#AEB2C2; padding:4px; }
-        .input-wrap .toggle-pw:hover { color:#6C63FF; }
+        .input-wrap .toggle-pw:hover { color:#1B4F8C; }
         .input-wrap .toggle-pw svg { width:16px; height:16px; }
 
         .form-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.4rem; }
         .remember-label { display:flex; align-items:center; gap:7px; font-size:12.5px; color:#6B7280; cursor:pointer; }
-        .remember-label input { width:15px; height:15px; accent-color:#6C63FF; cursor:pointer; }
-        .forgot-link { font-size:12.5px; color:#6C63FF; text-decoration:none; font-weight:500; }
+        .remember-label input { width:15px; height:15px; accent-color:#1B4F8C; cursor:pointer; }
+        .forgot-link { font-size:12.5px; color:#1B4F8C; text-decoration:none; font-weight:500; }
         .forgot-link:hover { text-decoration:underline; }
 
         .btn-login {
@@ -154,11 +154,11 @@
             padding:9px; font-size:12.5px; font-weight:500; color:#374151;
             cursor:pointer; font-family:'Poppins',sans-serif; transition:all .15s;
         }
-        .btn-social:hover { border-color:#6C63FF; background:#FAFAFF; }
+        .btn-social:hover { border-color:#1B4F8C; background:#FAFAFF; }
         .btn-social svg { width:16px; height:16px; }
 
         .register-link { text-align:center; font-size:13px; color:#6B7280; margin-top:1.3rem; }
-        .register-link a { color:#6C63FF; text-decoration:none; font-weight:600; }
+        .register-link a { color:#1B4F8C; text-decoration:none; font-weight:600; }
         .register-link a:hover { text-decoration:underline; }
 
         .error-alert { background:#FEF2F2; border:1px solid #FECACA; border-radius:10px; padding:10px 14px; margin-bottom:1rem; font-size:12.5px; color:#DC2626; }
