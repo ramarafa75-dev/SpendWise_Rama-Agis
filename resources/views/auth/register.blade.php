@@ -15,7 +15,7 @@
             min-height:100vh;
             display:flex; align-items:center; justify-content:center;
             padding:2.5rem 1.5rem;
-            background:linear-gradient(135deg,#5B6FE8 0%,#7C6FE0 35%,#8B5FC8 65%,#6A4FB8 100%);
+            background:linear-gradient(180deg,#1B4F8C 0%,#2E72B5 35%,#4F9BD4 65%,#8FD0F5 100%);
             position:relative; overflow-x:hidden;
         }
 
@@ -37,7 +37,7 @@
         .wallet-logo { position:relative; width:84px; height:84px; margin-bottom:14px; }
         .wallet-badge {
             width:84px; height:84px; border-radius:24px;
-            background:linear-gradient(145deg,#7C9BFF,#6C63FF 55%,#9B6FFF);
+            background:linear-gradient(145deg,#4FA8E8,#2E72B5 55%,#1B4F8C);
             display:flex; align-items:center; justify-content:center;
             box-shadow:0 12px 30px rgba(40,20,90,.35), inset 0 1px 0 rgba(255,255,255,.25);
             animation:walletPulse 2.4s ease-in-out infinite;
@@ -112,21 +112,21 @@
             outline:none; transition:all .15s; font-family:'Poppins',sans-serif;
             background:#F8F8FB;
         }
-        .form-input:focus { border-color:#6C63FF; background:#fff; box-shadow:0 0 0 4px rgba(108,99,255,.12); }
+        .form-input:focus { border-color:#1B4F8C; background:#fff; box-shadow:0 0 0 4px rgba(27, 79, 140, 0.12); }
         .form-input::placeholder { color:#AEB2C2; }
 
         .btn-register {
-            width:100%; background:linear-gradient(120deg,#6C63FF,#5B8DEF 60%,#4FC3D9);
+            width:100%; background:linear-gradient(120deg,#1B4F8C,#2E72B5 55%,#4FA8E8);
             color:#fff; border:none; border-radius:11px;
             padding:12.5px; font-size:14px; font-weight:600; cursor:pointer;
             font-family:'Poppins',sans-serif; transition:all .2s;
             display:flex; align-items:center; justify-content:center; gap:8px; margin-top:.4rem;
         }
-        .btn-register:hover { box-shadow:0 8px 22px rgba(108,99,255,.45); transform:translateY(-1px); }
+        .btn-register:hover { box-shadow:0 8px 22px rgba(46,114,181,.45); transform:translateY(-1px); }
         .btn-register svg { width:16px; height:16px; }
 
-        .login-link { text-align:center; font-size:13px; color:#6B7280; margin-top:1.3rem; }
-        .login-link a { color:#6C63FF; text-decoration:none; font-weight:600; }
+        .login-link { text-align:center; font-size:13px; color:#1B4F8C; margin-top:1.3rem; }
+        .login-link a { color:#1B4F8C; text-decoration:none; font-weight:600; }
         .login-link a:hover { text-decoration:underline; }
 
         .error-alert { background:#FEF2F2; border:1px solid #FECACA; border-radius:10px; padding:10px 14px; margin-bottom:1rem; font-size:12.5px; color:#DC2626; }

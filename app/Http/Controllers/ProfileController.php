@@ -20,30 +20,48 @@ class ProfileController extends Controller
     }
 
     public function update(Request $request)
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        $request->validate([
-            'name'   => 'required|string|max:255',
-            'email'  => 'required|email|unique:users,email,' . $user->id,
-            'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    $request->validate([
+        'name'   => 'required|string|max:255',
+        'email'  => 'required|email|unique:users,email,'.$user->id,
+        'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    ]);
+
+    if ($request->hasFile('avatar')) {
+        $file = $request->file('avatar');
+
+        // Debug — cek file masuk
+        \Log::info('Avatar upload:', [
+            'original' => $file->getClientOriginalName(),
+            'size'     => $file->getSize(),
+            'valid'    => $file->isValid(),
         ]);
 
-        if ($request->hasFile('avatar')) {
-            // Hapus foto lama kalau ada
-            if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $path;
+        // Hapus foto lama
+        if ($user->getRawOriginal('avatar')) {
+            \Storage::disk('public')->delete($user->getRawOriginal('avatar'));
         }
 
-        $user->name  = $request->name;
-        $user->email = $request->email;
-        $user->save();
+        // Simpan file
+        $path = $file->store('avatars', 'public');
 
-        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
+        \Log::info('Avatar saved to: '.$path);
+
+        // Update pakai query builder langsung (bypass model)
+        \DB::table('users')->where('id', $user->id)->update(['avatar' => $path]);
+
+        \Log::info('DB updated for user: '.$user->id);
     }
+
+    \DB::table('users')->where('id', $user->id)->update([
+        'name'  => $request->name,
+        'email' => $request->email,
+    ]);
+
+    return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
+}
 
     public function updatePassword(Request $request)
     {
