@@ -14,7 +14,7 @@
             -webkit-font-smoothing:antialiased;
             min-height:100vh;
             display:flex; align-items:center; justify-content:center;
-            padding:2.5rem 1.5rem;
+            padding:3.5rem 1.5rem;
             background:linear-gradient(180deg,#1B4F8C 0%,#2E72B5 35%,#4F9BD4 65%,#8FD0F5 100%);
             position:relative; overflow-x:hidden;
         }
@@ -29,7 +29,7 @@
             50% { transform:translate(20px,-25px) scale(1.08); }
         }
 
-        .page-wrap { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:100%; max-width:420px; perspective:1700px; }
+        .page-wrap { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:100%; max-width:380px; perspective:1700px; }
 
         /* ── BRAND / LOGO BLOCK ── */
         .brand-block {
@@ -80,7 +80,7 @@
             width:100%; background:rgba(255,255,255,.97);
             border:1px solid rgba(255,255,255,.5);
             backdrop-filter:blur(20px);
-            border-radius:22px; padding:2.25rem 2rem 2rem;
+            border-radius:22px; padding:2rem 1.85rem 1.85rem;
             box-shadow:0 30px 70px rgba(30,15,70,.35);
             opacity:0; transform-style:preserve-3d; backface-visibility:hidden;
             animation:cardFlipIn .6s cubic-bezier(.22,.61,.36,1) .18s forwards;
