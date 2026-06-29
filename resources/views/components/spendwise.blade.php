@@ -33,8 +33,8 @@
             --icon-in-bg:   rgba(74,222,128,.15);
             --icon-out-bg:  rgba(248,113,113,.15);
             --shadow:       0 1px 4px rgba(0,0,0,.4);
-            --nav-active:   rgba(108,99,255,.2);
-            --nav-hover:    rgba(108,99,255,.12);
+            --nav-active:   #156fd694;
+            --nav-hover:    rgba(255, 255, 255, 0.54);
         }
 
         /* ══════════════════════════════════
@@ -63,8 +63,8 @@
             --icon-in-bg:   #DCFCE7;
             --icon-out-bg:  #FEE2E2;
             --shadow:       0 1px 4px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);
-            --nav-active:   rgba(108,99,255,.18);
-            --nav-hover:    rgba(108,99,255,.1);
+            --nav-active:   #156fd694;
+            --nav-hover:    rgba(0, 0, 0, 0.1);
         }
 
         /* ══════════════════════════════════
@@ -207,14 +207,14 @@
         .nav-item {
             display: flex; align-items: center; justify-content: center;
             width: 36px; height: 36px;
-            color: #9CA3AF;
+            color:var(--text-primary);
             text-decoration: none;
             border-radius: 10px;
             transition: all .15s;
             position: relative;
         }
-        .nav-item:hover { background: #F3F4F6; color: #1B4F8C; color: var(--accent); }
-        .nav-item.active { background: #EEF2FF; color: #1B4F8C; color: var(--accent); }
+        .nav-item:hover { background:var(--nav-hover); color: #1B4F8C; color: var(--accent); }
+        .nav-item.active { background: var(--nav-active); color: #1B4F8C; color: var(--accent); }
         .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
 
         /* Tooltip saat hover */
