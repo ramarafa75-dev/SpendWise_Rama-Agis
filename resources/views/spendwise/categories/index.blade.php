@@ -1,7 +1,7 @@
 <x-spendwise title="Kategori Anggaran">
 <style>
     .add-card { background:var(--bg-card); border-radius:10px; border:1px solid var(--border); padding:1.25rem; margin-bottom:1.25rem; box-shadow:var(--shadow); }
-    .add-card h2 { font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:1rem; }
+    .add-card h2 { font-size:13px; font-weight:600; color:#1B4F8C; margin-bottom:1rem; }
     .form-row { display:grid; grid-template-columns:1fr 1fr auto; gap:10px; align-items:flex-end; }
     .cat-list { display:flex; flex-direction:column; gap:10px; }
     .cat-card { background:var(--bg-card); border-radius:10px; border:1px solid var(--border); padding:1rem 1.25rem; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow); }
@@ -13,6 +13,7 @@
     .progress-bar { width:140px; height:5px; background:var(--border); border-radius:10px; overflow:hidden; }
     .progress-fill { height:100%; border-radius:10px; }
     .page-sub { font-size:12px; color:var(--text-muted); margin-bottom:1rem; }
+    .btn-primary { background:#1B4F8C; color:#fff; border:none; border-radius:8px; padding:9px 18px; font-size:13px; cursor:pointer; font-weight:500; font-family:'Poppins',sans-serif; }
 
     @php $colors = ['#7C6FFF','#EF4444','#F59E0B','#10B981','#3B82F6','#EC4899','#8B5CF6','#14B8A6']; @endphp
 </style>

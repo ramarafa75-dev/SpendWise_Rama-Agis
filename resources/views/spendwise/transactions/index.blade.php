@@ -6,6 +6,8 @@
     .page-header p { font-size:12px; color:var(--text-muted); }
     .filter-bar { display:flex; gap:8px; margin-bottom:1rem; }
     .table-card { background:var(--bg-card); border-radius:10px; border:1px solid var(--border); padding:1.25rem; box-shadow:var(--shadow); }
+    .btn-primary { background:#1B4F8C; color:#fff; border:none; border-radius:8px; padding:9px 18px; font-size:13px; cursor:pointer; font-weight:500; font-family:'Poppins',sans-serif; }
+
 </style>
 
 <div class="page-header">

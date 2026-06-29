@@ -15,7 +15,7 @@
             min-height:100vh;
             display:flex; align-items:center; justify-content:center;
             padding:2.5rem 1.5rem;
-            background:linear-gradient(180deg,#1B4F8C 0%,#2E72B5 35%,#4F9BD4 65%,#8FD0F5 100%);
+            background:linear-gradient(180deg,#8FD0F5 0%,#4F9BD4 35%,#2E72B5 65%,#1B4F8C 100%);
             position:relative; overflow-x:hidden;
         }
 

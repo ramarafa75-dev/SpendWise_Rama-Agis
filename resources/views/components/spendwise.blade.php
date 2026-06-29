@@ -22,7 +22,7 @@
             --text-primary: #E6EDF3;
             --text-secondary:#8B949E;
             --text-muted:   #484F58;
-            --accent:       #6C63FF;
+            --accent:       #1B4F8C;
             --success:      #4ADE80;
             --danger:       #F87171;
             --warning:      #FBBF24;
@@ -52,7 +52,7 @@
             --text-primary: #1A2035;
             --text-secondary:#6B7280;
             --text-muted:   #9CA3AF;
-            --accent:       #6C63FF;
+            --accent:       #1B4F8C;
             --success:      #16A34A;
             --danger:       #DC2626;
             --warning:      #F59E0B;
@@ -169,7 +169,7 @@
         }
         .sidebar-logo-icon {
             width: 32px; height: 32px;
-            background: #6C63FF; border-radius: 9px;
+            background:linear-gradient(145deg,#4FA8E8,#2E72B5 55%,#1B4F8C); border-radius: 9px;
             display: flex; align-items: center; justify-content: center;
         }
         .sidebar-logo-icon svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2; }
@@ -190,8 +190,8 @@
             transition: all .15s;
             position: relative;
         }
-        .nav-item:hover { background: #F3F4F6; color: #6C63FF; }
-        .nav-item.active { background: #EEF2FF; color: #6C63FF; }
+        .nav-item:hover { background: #F3F4F6; color: #1B4F8C; }
+        .nav-item.active { background: #EEF2FF; color: #1B4F8C; }
         .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
         /* Tooltip saat hover */
         .nav-item::after {
