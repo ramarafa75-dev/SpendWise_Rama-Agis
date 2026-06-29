@@ -14,7 +14,7 @@
     .progress-fill { height:100%; border-radius:10px; }
     .page-sub { font-size:12px; color:var(--text-muted); margin-bottom:1rem; }
     .btn-primary { background:#1B4F8C; color:#fff; border:none; border-radius:8px; padding:9px 18px; font-size:13px; cursor:pointer; font-weight:500; font-family:'Poppins',sans-serif; }
-
+    .btn-primary:hover { background:var(--accent); transform: translateY(-1px); }
     @php $colors = ['#7C6FFF','#EF4444','#F59E0B','#10B981','#3B82F6','#EC4899','#8B5CF6','#14B8A6']; @endphp
 </style>
 

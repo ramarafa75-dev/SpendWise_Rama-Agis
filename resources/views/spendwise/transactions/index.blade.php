@@ -7,7 +7,9 @@
     .filter-bar { display:flex; gap:8px; margin-bottom:1rem; }
     .table-card { background:var(--bg-card); border-radius:10px; border:1px solid var(--border); padding:1.25rem; box-shadow:var(--shadow); }
     .btn-primary { background:#1B4F8C; color:#fff; border:none; border-radius:8px; padding:9px 18px; font-size:13px; cursor:pointer; font-weight:500; font-family:'Poppins',sans-serif; }
-
+    .btn-primary:hover { background:var(--accent); transform: translateY(1px); }
+    .sw-select { background:var(--bg-input); border:1px solid var(--border); border-radius:7px; padding:9px 14px; font-size:13px; color:var(--text-primary); outline:none; font-family:'Poppins',sans-serif; }
+    .sw-select:hover { border-color:var(--accent); }
 </style>
 
 <div class="page-header">

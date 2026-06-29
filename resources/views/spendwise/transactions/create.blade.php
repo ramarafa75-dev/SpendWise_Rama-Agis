@@ -9,7 +9,9 @@
     .type-option label { display:flex; align-items:center; justify-content:center; gap:6px; padding:10px; border:1px solid var(--border); border-radius:8px; cursor:pointer; font-size:13px; color:var(--text-muted); transition:all .15s; background:var(--bg-input); }
     .type-option input[type="radio"]:checked + label { border-color:var(--accent); background:rgba(108,99,255,.12); color:#A5B4FC; font-weight:500; }
     .form-actions { display:flex; gap:10px; margin-top:1.25rem; }
-     .btn-primary { background:#1B4F8C; color:#fff; border:none; border-radius:8px; padding:9px 18px; font-size:13px; cursor:pointer; font-weight:500; font-family:'Poppins',sans-serif; }
+    .btn-primary { background:#1B4F8C; color:#fff; border:none; border-radius:8px; padding:9px 18px; font-size:13px; cursor:pointer; font-weight:500; font-family:'Poppins',sans-serif; }
+    .btn-primary:hover { background:var(--accent); transform: translateY(1px);}
+    .btn-secondary:hover { background:var(--bg-row); border-color:var(--accent);}
 
 </style>
 

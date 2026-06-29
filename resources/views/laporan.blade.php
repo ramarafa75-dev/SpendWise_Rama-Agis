@@ -6,7 +6,9 @@
 .filter-group label { font-size:11px; color:var(--text-muted); font-weight:500; }
 .filter-group select { background:var(--bg-input); border:1px solid var(--border); border-radius:7px; padding:9px 14px; font-size:13px; color:var(--text-primary); outline:none; font-family:'Poppins',sans-serif; }
 .btn-show { background:#1B4F8C; color:#fff; border:none; border-radius:8px; padding:9px 18px; font-size:13px; cursor:pointer; font-weight:500; font-family:'Poppins',sans-serif; }
+.btn-show:hover { background:var(--accent); transform: translateY(-1px); }
 .btn-print { background:var(--bg-row); color:var(--text-primary); border:1px solid var(--border); border-radius:8px; padding:9px 18px; font-size:13px; cursor:pointer; font-weight:500; font-family:'Poppins',sans-serif; display:flex; align-items:center; gap:7px; }
+.btn-print:hover { background:rgba(0,0,0,.05); border-color:var(--accent);}
 .btn-print svg { width:14px; height:14px; }
 .report-wrap { background:var(--bg-card); border-radius:12px; border:1px solid var(--border); box-shadow:var(--shadow); overflow:hidden; }
 .report-paper { background:#fff; color:#111; max-width:720px; margin:0 auto; padding:2rem 2.5rem; ... }

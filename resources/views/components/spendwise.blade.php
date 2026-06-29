@@ -21,8 +21,8 @@
             --border:       #21262D;
             --text-primary: #E6EDF3;
             --text-secondary:#8B949E;
-            --text-muted:   #484F58;
-            --accent:       #1B4F8C;
+            --text-muted:   #ffffff;
+            --accent:       #1c74d8;
             --success:      #4ADE80;
             --danger:       #F87171;
             --warning:      #FBBF24;
@@ -51,8 +51,8 @@
             --border:       #E2E6F0;
             --text-primary: #1A2035;
             --text-secondary:#6B7280;
-            --text-muted:   #9CA3AF;
-            --accent:       #1B4F8C;
+            --text-muted:   #000000;
+            --accent:       #1c74d8;
             --success:      #16A34A;
             --danger:       #DC2626;
             --warning:      #F59E0B;
@@ -138,33 +138,56 @@
         ══════════════════════════════════ */
         .sidebar-wrap {
             position: absolute;
-            left: 14px;
+            left: 4px;
             top: 50%;
             transform: translateY(-50%);
             z-index: 100;
+            /* Auto-hide ke kiri, sisakan 8px sebagai trigger */
+            transition: transform .3s cubic-bezier(.4,0,.2,1);
+            transform: translateY(-50%) translateX(calc(-100% + 8px));
         }
+        /* Muncul saat hover */
+        .sidebar-wrap:hover {
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* Tab kecil sebagai trigger */
+        .sidebar-wrap::after {
+            content: '';
+            position: absolute;
+            right: -1px; top: 50%;
+            transform: translateY(-50%);
+            width: 4px; height: 40px;
+            background: var(--accent);
+            border-radius: 0 4px 4px 0;
+            opacity: .7;
+            transition: opacity .2s;
+        }
+        .sidebar-wrap:hover::after { opacity: 0; }
+
         .sidebar {
             width: 52px;
-            background: #ffffff60;
+            background: var(--bg-card);
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-radius: 20px;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 8px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+            border-radius: 0 20px 20px 0;
+            border: 1px solid var(--border);
+            border-left: none;
+            box-shadow: 4px 0 24px rgba(0,0,0,.15), 2px 0 8px rgba(0,0,0,.08);
             height: auto;
             overflow: visible;
             padding: 12px 0;
             gap: 2px;
-            opacity: 0.8;
-            transition: opacity .25s;
+            transition: background .2s, border-color .2s;
         }
+        
         .sidebar:hover { opacity: 1;}
         /* Logo */
         .sidebar-logo {
             display: flex; align-items: center; justify-content: center;
             padding: 0 0 12px;
-            border-bottom: 1px solid #F0F0F0;
+            border-bottom: 1px solid var(--border);
             width: 100%; margin-bottom: 6px;
         }
         .sidebar-logo-icon {
@@ -190,14 +213,15 @@
             transition: all .15s;
             position: relative;
         }
-        .nav-item:hover { background: #F3F4F6; color: #1B4F8C; }
-        .nav-item.active { background: #EEF2FF; color: #1B4F8C; }
+        .nav-item:hover { background: #F3F4F6; color: #1B4F8C; color: var(--accent); }
+        .nav-item.active { background: #EEF2FF; color: #1B4F8C; color: var(--accent); }
         .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+
         /* Tooltip saat hover */
         .nav-item::after {
             content: attr(data-tooltip);
             position: absolute; left: calc(100% + 14px);
-            background: #1A2035; color: #fff;
+            background: var(--bg-sidebar); color: #fff;
             font-size: 11px; font-weight: 500;
             padding: 5px 10px; border-radius: 7px;
             white-space: nowrap; pointer-events: none;
@@ -205,19 +229,21 @@
             transition: all .15s;
             z-index: 999;
             font-family: 'Poppins', sans-serif;
+            border: 1px solid var(--border);
         }
         .nav-item:hover::after { opacity:1; transform:translateX(0); }
+
         /* Divider sebelum profile */
         .sidebar-divider {
             width: 32px; height: 1px;
-            background: #F0F0F0;
+            background: var(--border);
             margin: 4px 0;
         }
 
         /* ══════════════════════════════════
            MAIN
         ══════════════════════════════════ */
-        .main-wrap { flex:1; display:flex; flex-direction:column; overflow:hidden; background:var(--bg-body);}
+        .main-wrap { margin-left: 6px; flex:1; display:flex; flex-direction:column; overflow:hidden; background:var(--bg-body);}
         /* Floating Topbar */
         .topbar-wrap { padding:14px 1.5rem 0; background:var(--bg-body); flex-shrink:0; transition:background .2s; }
         .topbar {
@@ -239,8 +265,8 @@
         .topbar-avatar { width:28px; height:28px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0; overflow:hidden; }
         .topbar-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
         .topbar-profile-name { font-size:12px; font-weight:500; color:var(--text-primary); }
-        .main-footer { padding:14px 1.75rem; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:8px; font-size:11px; color:var(--text-muted); margin-top:2rem; }
-        .main-footer a { color:var(--text-muted); text-decoration:none; }
+        .main-footer { padding:14px 1.75rem; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:8px; font-size:11px; color:#9CA3AF; margin-top:2rem; }
+        .main-footer a { color:#9CA3AF; text-decoration:none; }
         .main-footer a:hover { color:var(--text-secondary); }
         .main-footer span { color:var(--border); }
 
