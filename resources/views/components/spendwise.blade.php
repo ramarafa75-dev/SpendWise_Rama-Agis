@@ -420,11 +420,27 @@
                     <span class="topbar-profile-name">{{ auth()->user()->name }}</span>
                 </a>
 
-                &nbsp;|&nbsp;
-                <a href="{{ route('logout') }}"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                   style="color:#EF4444;text-decoration:none;">Keluar</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none">@csrf</form>
+                <button onclick="document.getElementById('logout-form').submit()" style="
+                    display:inline-flex; align-items:center; gap:6px;
+                    background:rgba(239,68,68,.08);
+                    color:#EF4444;
+                    border:1px solid rgba(239,68,68,.2);
+                    border-radius:8px;
+                    padding:6px 12px;
+                    font-size:12px; font-weight:500;
+                    cursor:pointer;
+                    font-family:'Poppins',sans-serif;
+                    transition:all .15s;
+                " onmouseover="this.style.background='rgba(239,68,68,.15)';this.style.borderColor='rgba(239,68,68,.4)'"
+                onmouseout="this.style.background='rgba(239,68,68,.08)';this.style.borderColor='rgba(239,68,68,.2)'">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Keluar
+                </button>
             </div>
         </div>
     </div>
