@@ -376,6 +376,15 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
         </a>
 
+        <a href="{{ route('savings.index') }}"
+            class="nav-item {{ request()->routeIs('savings.*') ? 'active' : '' }}"
+            data-tooltip="Target Tabungan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+        </a>
+
         @if(Route::has('laporan'))
         <a href="{{ route('laporan') }}"
            class="nav-item {{ request()->routeIs('laporan') ? 'active' : '' }}"

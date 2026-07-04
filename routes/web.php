@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SavingsGoalController;
 
 
 Route::get('/', function () {
@@ -21,7 +22,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     Route::resource('categories', CategoryController::class);
-    Route::resource('transactions', TransactionController::class);
+    Route::resource('transactions', TransactionController::class)->except(['show']);
+
+      // Target tabungan
+  Route::get('/savings',           [SavingsGoalController::class, 'index'])->name('savings.index');
+  Route::post('/savings',          [SavingsGoalController::class, 'store'])->name('savings.store');
+  Route::put('/savings/{saving}',  [SavingsGoalController::class, 'update'])->name('savings.update');
+  Route::delete('/savings/{saving}',[SavingsGoalController::class, 'destroy'])->name('savings.destroy');
 
 });
 
