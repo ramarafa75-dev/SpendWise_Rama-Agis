@@ -1,4 +1,4 @@
-<x-spendwise title="Dashboard">
+<x-spendwise title="Dashboard Saya">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
     .alert-boros { background:var(--badge-out-bg); border:1px solid var(--icon-out-bg); border-radius:10px; padding:12px 16px; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--badge-out-txt); }
