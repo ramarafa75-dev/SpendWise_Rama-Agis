@@ -330,6 +330,56 @@
         @media (prefers-reduced-motion: reduce) {
             .sidebar, .topbar, .main-content, .nav-item, [data-reveal] { animation:none !important; transition:none !important; opacity:1 !important; transform:none !important; }
         }
+        /* ── MOBILE RESPONSIVE ── */
+@media (max-width: 768px) {
+    body { flex-direction: column; height: auto; min-height: 100vh; overflow: auto; }
+
+    /* Sembunyikan sidebar floating di mobile */
+    .sidebar-wrap { display: none; }
+
+    /* Main wrap full width */
+    .main-wrap { margin-left: 0; width: 100%; }
+
+    /* Topbar mobile */
+    .topbar-wrap { padding: 10px 12px 0; }
+    .topbar { padding: 10px 12px; border-radius: 10px; }
+    .topbar h1 { font-size: 14px; }
+    .topbar-right { gap: 6px; font-size: 10px; }
+    .topbar-profile-name { display: none; }
+    .topbar-profile { padding: 4px; }
+
+    /* Main content */
+    .main-content { padding: 10px 12px; }
+
+    /* Bottom navbar untuk mobile */
+    .mobile-nav {
+        display: flex;
+        position: fixed; bottom: 0; left: 0; right: 0;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border);
+        padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+        z-index: 100;
+        box-shadow: 0 -4px 20px rgba(0,0,0,.1);
+    }
+    .mobile-nav-item {
+        flex: 1; display: flex; flex-direction: column;
+        align-items: center; gap: 3px;
+        text-decoration: none; color: var(--text-muted);
+        font-size: 10px; font-family: 'Poppins', sans-serif;
+        padding: 4px 0; transition: all .15s;
+    }
+    .mobile-nav-item.active { color: var(--accent); }
+    .mobile-nav-item svg { width: 20px; height: 20px; }
+
+    /* Tambah padding bawah agar tidak tertutup bottom nav */
+    .main-content { padding-bottom: 80px; }
+
+    /* Footer sembunyi di mobile */
+    .main-footer { display: none; }
+}
+
+/* Sembunyikan bottom nav di desktop */
+.mobile-nav { display: none; }
     </style>
 
     {{-- Terapkan tema SEBELUM render untuk cegah flash --}}
@@ -472,7 +522,37 @@
         </footer>
     </main>
 </div>
-
+{{-- Mobile Bottom Navigation --}}
+<nav class="mobile-nav">
+    <a href="{{ route('dashboard') }}" class="mobile-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+    </a>
+    <a href="{{ route('categories.index') }}" class="mobile-nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1"/></svg>
+        Kategori
+    </a>
+    <a href="{{ route('transactions.create') }}" class="mobile-nav-item {{ request()->routeIs('transactions.create') ? 'active' : '' }}">
+        <div style="width:44px;height:44px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:-20px;box-shadow:0 4px 12px rgba(108,99,255,.4)">
+            <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        </div>
+        Tambah
+    </a>
+    <a href="{{ route('transactions.index') }}" class="mobile-nav-item {{ request()->routeIs('transactions.*') && !request()->routeIs('transactions.create') ? 'active' : '' }}">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+        Transaksi
+    </a>
+    <a href="{{ route('profile') }}" class="mobile-nav-item {{ request()->routeIs('profile') ? 'active' : '' }}">
+        <div style="width:26px;height:26px;border-radius:50%;overflow:hidden;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;border:2px solid var(--border)">
+            @if(auth()->user()->avatar)
+                <img src="{{ asset('storage/'.auth()->user()->avatar) }}" style="width:100%;height:100%;object-fit:cover">
+            @else
+                {{ strtoupper(substr(auth()->user()->name,0,1)) }}
+            @endif
+        </div>
+        Profil
+    </a>
+</nav>
 <script>
 function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme');
@@ -541,6 +621,93 @@ function toggleTheme() {
         setupReveal();
     }
 })();
+</script>
+{{-- Loading Screen --}}
+<div id="page-loader" style="
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:var(--bg-body); z-index:9999;
+    display:none; flex-direction:column;
+    align-items:center; justify-content:center; gap:20px;
+">
+    <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <style>
+            .coin-anim { animation:coinDrop 1.4s cubic-bezier(.4,0,.2,1) infinite; }
+            .slot-pulse { stroke-linecap:round; animation:slotPulse 1.4s ease-in-out infinite; }
+            .flash-anim { animation:flash 1.4s ease-in-out infinite; }
+            @keyframes coinDrop {
+                0%   { transform:translateY(-80px) scale(1); opacity:1; }
+                60%  { transform:translateY(10px) scale(.85); opacity:1; }
+                75%  { transform:translateY(4px) scale(.7); opacity:.6; }
+                85%  { transform:translateY(8px) scale(.5); opacity:.2; }
+                100% { transform:translateY(8px) scale(.5); opacity:0; }
+            }
+            @keyframes slotPulse {
+                0%,40% { stroke:#4F46E5; }
+                60%,75%{ stroke:#FDE68A; }
+                100%   { stroke:#4F46E5; }
+            }
+            @keyframes flash {
+                0%,55%{ opacity:0; } 65%{ opacity:.15; } 80%,100%{ opacity:0; }
+            }
+        </style>
+        <g class="coin-anim">
+            <circle cx="60" cy="28" r="14" fill="#FBBF24"/>
+            <ellipse cx="57" cy="24" rx="5" ry="3" fill="#FDE68A" opacity=".7" transform="rotate(-30 57 24)"/>
+            <text x="60" y="33" text-anchor="middle" style="font-size:13px;font-weight:700;fill:#92400E;font-family:sans-serif;">$</text>
+        </g>
+        <rect x="18" y="58" width="84" height="52" rx="10" fill="#6C63FF"/>
+        <rect class="flash-anim" x="18" y="58" width="84" height="52" rx="10" fill="#fff"/>
+        <rect x="28" y="54" width="64" height="14" rx="7" fill="#5A52E0"/>
+        <line class="slot-pulse" x1="42" y1="61" x2="78" y2="61" stroke="#4F46E5" stroke-width="3"/>
+        <rect x="28" y="76" width="40" height="6" rx="3" fill="#5A52E0" opacity=".7"/>
+        <rect x="28" y="88" width="26" height="4" rx="2" fill="#5A52E0" opacity=".5"/>
+        <circle cx="86" cy="85" r="10" fill="#4F46E5"/>
+        <text x="86" y="89" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#A5B4FC;font-family:sans-serif;">Rp</text>
+    </svg>
+
+    <svg width="28" height="10" viewBox="0 0 28 10" style="overflow:visible">
+        <style>
+            .dot{fill:#6C63FF;animation:dotAnim 1.2s ease-in-out infinite;}
+            .dot:nth-child(2){animation-delay:.2s}
+            .dot:nth-child(3){animation-delay:.4s}
+            @keyframes dotAnim{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+        </style>
+        <circle class="dot" cx="5" cy="5" r="3"/>
+        <circle class="dot" cx="14" cy="5" r="3"/>
+        <circle class="dot" cx="23" cy="5" r="3"/>
+    </svg>
+
+    <div style="font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;color:var(--text-secondary);letter-spacing:.3px;animation:pulse 1.2s ease-in-out infinite">
+        Memuat halaman...
+    </div>
+    <style>@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}</style>
+</div>
+
+<script>
+    const loader = document.getElementById('page-loader');
+
+    // Tampilkan loader saat klik link navigasi
+    document.querySelectorAll('a[href]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            // Skip: anchor, javascript, target blank, logout form
+            if (!href || href.startsWith('#') || href.startsWith('javascript') ||
+                this.target === '_blank' || this.closest('form')) return;
+            e.preventDefault();
+            loader.style.display = 'flex';
+            setTimeout(() => { window.location.href = href; }, 300);
+        });
+    });
+
+    // Sembunyikan loader saat halaman sudah load
+    window.addEventListener('pageshow', () => {
+        loader.style.display = 'none';
+    });
+
+    // Sembunyikan saat back/forward
+    window.addEventListener('popstate', () => {
+        loader.style.display = 'none';
+    });
 </script>
 </body>
 </html>

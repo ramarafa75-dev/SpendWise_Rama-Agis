@@ -1,4 +1,4 @@
-<x-spendwise title="Dashboard Saya">
+<x-spendwise title="Dashboard">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
     .alert-boros { background:var(--badge-out-bg); border:1px solid var(--icon-out-bg); border-radius:10px; padding:12px 16px; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--badge-out-txt); }
@@ -29,6 +29,13 @@
     .table-hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
     .table-hd h2 { font-size:14px; font-weight:600; color:var(--text-primary); }
     .table-hd a { font-size:12px; color:var(--accent); text-decoration:none; }
+
+@media (max-width: 768px) {
+    .stats-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+    .charts-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+    .stat-card-value { font-size: 18px !important; }
+    .chart-wrap { height: 180px !important; }
+}
 </style>
 
 @php
