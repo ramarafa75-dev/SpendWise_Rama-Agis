@@ -1,7 +1,7 @@
 <x-spendwise title="Dashboard">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    .alert-boros { background:var(--badge-out-bg); border:1px solid var(--icon-out-bg); border-radius:10px; padding:12px 16px; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--badge-out-txt); }
+    .alert-boros { background:var(--badge-out-bg); border:1px solid var(--icon-out-bg); border-radius:10px; padding:12px 16px; margin-bottom:10px; display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--badge-out-txt); }
     .alert-boros-title { font-weight:600; margin-bottom:2px; }
     .alert-boros-sub { font-size:12px; opacity:.8; }
     .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:1.25rem; }
@@ -30,44 +30,90 @@
     .table-hd h2 { font-size:14px; font-weight:600; color:var(--text-primary); }
     .table-hd a { font-size:12px; color:var(--accent); text-decoration:none; }
 
-@media (max-width: 768px) {
-    .stats-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
-    .charts-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
-    .stat-card-value { font-size: 18px !important; }
-    .chart-wrap { height: 180px !important; }
-}
+    /* Period banner kecil */
+    .period-chip { display:inline-flex; align-items:center; gap:6px; background:rgba(108,99,255,.1); color:var(--accent); border:1px solid rgba(108,99,255,.2); border-radius:20px; padding:4px 12px; font-size:11px; font-weight:500; margin-bottom:1rem; }
 </style>
 
 @php
-    $userId = auth()->id();
-    $colors = ['#7C6FFF','#EF4444','#F59E0B','#10B981','#3B82F6','#EC4899','#8B5CF6','#14B8A6'];
+    $userId   = auth()->id();
+    $user     = auth()->user();
+    $colors   = ['#7C6FFF','#EF4444','#F59E0B','#10B981','#3B82F6','#EC4899','#8B5CF6','#14B8A6'];
+
+    // Periode aktif berdasarkan tanggal gajian
+    $period   = \App\Helpers\PaydayHelper::getCurrentPeriod($user->payday_date);
+    $pStart   = $period['start'];
+    $pEnd     = $period['end'];
+    $daysLeft = \App\Helpers\PaydayHelper::getDaysUntilPayday($user->payday_date);
+
+    // Alert kategori over budget dalam periode ini
     $alertCategories = \App\Models\Category::where('user_id',$userId)
-        ->with(['transactions'=>fn($q)=>$q->where('type','pengeluaran')])->get()
-        ->filter(fn($c)=>$c->max_budget>0&&$c->transactions->sum('amount')>=$c->max_budget);
+        ->get()->filter(function($cat) use ($pStart,$pEnd) {
+            $used = $cat->transactions()->where('type','pengeluaran')
+                ->whereDate('date','>=',$pStart)->whereDate('date','<=',$pEnd)
+                ->sum('amount');
+            return $cat->max_budget > 0 && $used >= $cat->max_budget;
+        });
+
+    // Stat cards — semua waktu
     $totalPemasukan   = \App\Models\Transaction::where('user_id',$userId)->where('type','pemasukan')->sum('amount');
     $totalPengeluaran = \App\Models\Transaction::where('user_id',$userId)->where('type','pengeluaran')->sum('amount');
     $saldo            = $totalPemasukan - $totalPengeluaran;
-    $categories = \App\Models\Category::where('user_id',$userId)->with(['transactions'=>fn($q)=>$q->where('type','pengeluaran')])->get();
-    $pieLabels    = $categories->pluck('name')->toJson();
-    $pieData      = $categories->map(fn($c)=>$c->transactions->sum('amount'))->toJson();
-    $pieColors    = collect($colors)->take($categories->count())->values()->toJson();
+
+    // Pemasukan & pengeluaran periode ini
+    $periodMasuk   = \App\Models\Transaction::where('user_id',$userId)->where('type','pemasukan')
+        ->whereDate('date','>=',$pStart)->whereDate('date','<=',$pEnd)->sum('amount');
+    $periodKeluar  = \App\Models\Transaction::where('user_id',$userId)->where('type','pengeluaran')
+        ->whereDate('date','>=',$pStart)->whereDate('date','<=',$pEnd)->sum('amount');
+
+    // Pie chart — pengeluaran per kategori DALAM PERIODE INI
+    $categories = \App\Models\Category::where('user_id',$userId)->get()->map(function($cat) use ($pStart,$pEnd) {
+        $cat->period_spent = $cat->transactions()->where('type','pengeluaran')
+            ->whereDate('date','>=',$pStart)->whereDate('date','<=',$pEnd)
+            ->sum('amount');
+        return $cat;
+    })->filter(fn($c) => $c->period_spent > 0);
+
+    $pieLabels = $categories->pluck('name')->toJson();
+    $pieData   = $categories->pluck('period_spent')->toJson();
+    $pieColors = collect($colors)->take($categories->count())->values()->toJson();
+
+    // Bar chart — 6 bulan terakhir
     $months       = collect(range(5,0))->map(fn($i)=>now()->subMonths($i));
     $barLabels    = $months->map(fn($m)=>$m->translatedFormat('M Y'))->toJson();
     $barKeluar    = $months->map(fn($m)=>\App\Models\Transaction::where('user_id',$userId)->where('type','pengeluaran')->whereYear('date',$m->year)->whereMonth('date',$m->month)->sum('amount'))->toJson();
     $barMasuk     = $months->map(fn($m)=>\App\Models\Transaction::where('user_id',$userId)->where('type','pemasukan')->whereYear('date',$m->year)->whereMonth('date',$m->month)->sum('amount'))->toJson();
+
+    // Budget status periode ini
+    $allCategories = \App\Models\Category::where('user_id',$userId)->get()->map(function($cat) use ($pStart,$pEnd) {
+        $cat->period_spent = $cat->transactions()->where('type','pengeluaran')
+            ->whereDate('date','>=',$pStart)->whereDate('date','<=',$pEnd)
+            ->sum('amount');
+        return $cat;
+    });
+
     $transactions = \App\Models\Transaction::with('category')->where('user_id',$userId)->latest('date')->take(5)->get();
 @endphp
 
+{{-- Alerts --}}
 @foreach($alertCategories as $ac)
-<div class="alert-boros">
-    <span style="font-size:18px;flex-shrink:0">⚠️</span>
-    <div>
-        <div class="alert-boros-title">Batas Budget Tercapai — {{ $ac->name }}</div>
-        <div class="alert-boros-sub">Pengeluaran Rp {{ number_format($ac->transactions->sum('amount'),0,',','.') }} mencapai batas Rp {{ number_format($ac->max_budget,0,',','.') }}.</div>
+    @php $usedAmt = $ac->transactions()->where('type','pengeluaran')->whereDate('date','>=',$pStart)->whereDate('date','<=',$pEnd)->sum('amount'); @endphp
+    <div class="alert-boros">
+        <span style="font-size:18px;flex-shrink:0">⚠️</span>
+        <div>
+            <div class="alert-boros-title">Batas Budget Tercapai — {{ $ac->name }}</div>
+            <div class="alert-boros-sub">Pengeluaran Rp {{ number_format($usedAmt,0,',','.') }} mencapai batas Rp {{ number_format($ac->max_budget,0,',','.') }}.</div>
+        </div>
     </div>
-</div>
 @endforeach
 
+{{-- Period chip --}}
+<div class="period-chip">
+    📅 Periode: {{ $period['label'] }}
+    @if($daysLeft !== null) &nbsp;·&nbsp; 🎯 {{ $daysLeft }} hari lagi gajian @endif
+    &nbsp;·&nbsp; <a href="{{ route('categories.index') }}" style="color:var(--accent);text-decoration:none">Lihat detail →</a>
+</div>
+
+{{-- Stat Cards --}}
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon" style="background:rgba(108,99,255,.12)">
@@ -75,48 +121,65 @@
         </div>
         <div class="stat-label">Total Saldo</div>
         <div class="stat-value" style="color:{{ $saldo>=0?'var(--text-primary)':'var(--danger)' }}">Rp {{ number_format(abs($saldo),0,',','.') }}</div>
-        <div class="stat-sub">Pemasukan - Pengeluaran</div>
+        <div class="stat-sub">Semua waktu</div>
     </div>
     <div class="stat-card">
         <div class="stat-icon" style="background:var(--badge-in-bg)">
             <svg fill="none" stroke="var(--success)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 14l4 4 4-4"/></svg>
         </div>
-        <div class="stat-label">Total Pemasukan</div>
-        <div class="stat-value" style="color:var(--success)">Rp {{ number_format($totalPemasukan,0,',','.') }}</div>
-        <div class="stat-sub">Semua waktu</div>
+        <div class="stat-label">Pemasukan Periode Ini</div>
+        <div class="stat-value" style="color:var(--success)">Rp {{ number_format($periodMasuk,0,',','.') }}</div>
+        <div class="stat-sub">{{ $period['label'] }}</div>
     </div>
     <div class="stat-card">
         <div class="stat-icon" style="background:var(--badge-out-bg)">
             <svg fill="none" stroke="var(--danger)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16V8M8 10l4-4 4 4"/></svg>
         </div>
-        <div class="stat-label">Total Pengeluaran</div>
-        <div class="stat-value" style="color:var(--danger)">Rp {{ number_format($totalPengeluaran,0,',','.') }}</div>
-        <div class="stat-sub">Semua waktu</div>
+        <div class="stat-label">Pengeluaran Periode Ini</div>
+        <div class="stat-value" style="color:var(--danger)">Rp {{ number_format($periodKeluar,0,',','.') }}</div>
+        <div class="stat-sub">{{ $period['label'] }}</div>
     </div>
 </div>
 
+{{-- Charts --}}
 <div class="charts-grid">
     <div class="chart-card">
-        <div class="chart-hd"><h2>Pengeluaran per Kategori</h2><span>Semua waktu</span></div>
-        <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+        <div class="chart-hd">
+            <h2>Pengeluaran per Kategori</h2>
+            <span>Periode ini</span>
+        </div>
+        @if($categories->isEmpty())
+            <div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Belum ada pengeluaran periode ini.</div>
+        @else
+            <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+        @endif
     </div>
     <div class="chart-card">
-        <div class="chart-hd"><h2>Arus Kas Bulanan</h2><span>6 bulan terakhir</span></div>
+        <div class="chart-hd">
+            <h2>Arus Kas Bulanan</h2>
+            <span>6 bulan terakhir</span>
+        </div>
         <div class="chart-wrap"><canvas id="barChart"></canvas></div>
     </div>
 </div>
 
+{{-- Budget Status --}}
 <div class="chart-card" style="margin-bottom:1.25rem">
     <div class="chart-hd">
         <h2>Status Budget Kategori</h2>
         <a href="{{ route('categories.index') }}" style="font-size:12px;color:var(--accent);text-decoration:none">Kelola →</a>
     </div>
-    @if($categories->isEmpty())
-        <div class="empty-state">Belum ada kategori.</div>
+    @if($allCategories->isEmpty())
+        <div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:13px">Belum ada kategori.</div>
     @else
         <div class="budget-list">
-            @foreach($categories as $i => $cat)
-                @php $used=$cat->transactions->sum('amount'); $pct=$cat->max_budget>0?min(100,($used/$cat->max_budget)*100):0; $color=$colors[$i%count($colors)]; $pctColor=$pct>=100?'var(--danger)':($pct>=75?'var(--warning)':'var(--success)'); @endphp
+            @foreach($allCategories as $i => $cat)
+                @php
+                    $used = $cat->period_spent;
+                    $pct  = $cat->max_budget>0?min(100,($used/$cat->max_budget)*100):0;
+                    $color=$colors[$i%count($colors)];
+                    $pctColor=$pct>=100?'var(--danger)':($pct>=75?'var(--warning)':'var(--success)');
+                @endphp
                 <div class="budget-item">
                     <div class="budget-left">
                         <span class="budget-dot" style="background:{{ $color }}"></span>
@@ -135,34 +198,45 @@
     @endif
 </div>
 
+{{-- Transaksi Terbaru --}}
 <div class="table-wrap">
     <div class="table-hd">
         <h2>Transaksi Terbaru</h2>
         <a href="{{ route('transactions.index') }}">Lihat semua →</a>
     </div>
     @if($transactions->isEmpty())
-        <div class="empty-state">Belum ada transaksi. <a href="{{ route('transactions.create') }}" style="color:var(--accent)">Tambah sekarang</a></div>
+        <div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Belum ada transaksi.</div>
     @else
-        <table class="sw-table">
-            <thead><tr><th></th><th>Tanggal</th><th>Kategori</th><th>Deskripsi</th><th>Jumlah (Rp)</th><th>USD</th><th>Jenis</th></tr></thead>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead><tr>
+                <th style="text-align:left;color:var(--text-muted);font-weight:500;padding:0 10px 10px;font-size:11px;border-bottom:1px solid var(--border)"></th>
+                <th style="text-align:left;color:var(--text-muted);font-weight:500;padding:0 10px 10px;font-size:11px;border-bottom:1px solid var(--border)">Tanggal</th>
+                <th style="text-align:left;color:var(--text-muted);font-weight:500;padding:0 10px 10px;font-size:11px;border-bottom:1px solid var(--border)">Kategori</th>
+                <th style="text-align:left;color:var(--text-muted);font-weight:500;padding:0 10px 10px;font-size:11px;border-bottom:1px solid var(--border)">Deskripsi</th>
+                <th style="text-align:left;color:var(--text-muted);font-weight:500;padding:0 10px 10px;font-size:11px;border-bottom:1px solid var(--border)">Jumlah (Rp)</th>
+                <th style="text-align:left;color:var(--text-muted);font-weight:500;padding:0 10px 10px;font-size:11px;border-bottom:1px solid var(--border)">Jenis</th>
+            </tr></thead>
             <tbody>
                 @foreach($transactions as $trx)
                 <tr>
-                    <td>
-                        <div class="trx-icon {{ $trx->type==='pemasukan'?'in':'out' }}">
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--border)">
+                        <div style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:{{ $trx->type==='pemasukan'?'var(--icon-in-bg)':'var(--icon-out-bg)' }}">
                             @if($trx->type==='pemasukan')
-                                <svg fill="none" stroke="var(--success)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                                <svg width="16" height="16" fill="none" stroke="var(--success)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
                             @else
-                                <svg fill="none" stroke="var(--danger)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                                <svg width="16" height="16" fill="none" stroke="var(--danger)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
                             @endif
                         </div>
                     </td>
-                    <td style="color:var(--text-primary)">{{ \Carbon\Carbon::parse($trx->date)->format('d M Y') }}</td>
-                    <td style="color:var(--text-primary)">{{ $trx->category->name??'-' }}</td>
-                    <td>{{ $trx->description??'-' }}</td>
-                    <td style="font-weight:600;color:{{ $trx->type==='pemasukan'?'var(--success)':'var(--danger)' }}">{{ $trx->type==='pemasukan'?'+':'-' }}Rp {{ number_format($trx->amount,0,',','.') }}</td>
-                    <td>$ {{ $trx->amount_usd??'0' }}</td>
-                    <td><span class="badge {{ $trx->type==='pemasukan'?'badge-in':'badge-out' }}">{{ ucfirst($trx->type) }}</span></td>
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--border);color:var(--text-primary)">{{ \Carbon\Carbon::parse($trx->date)->format('d M Y') }}</td>
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--border);color:var(--text-primary)">{{ $trx->category->name??'-' }}</td>
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--border);color:var(--text-secondary)">{{ $trx->description??'-' }}</td>
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--border);font-weight:600;color:{{ $trx->type==='pemasukan'?'var(--success)':'var(--danger)' }}">
+                        {{ $trx->type==='pemasukan'?'+':'-' }}Rp {{ number_format($trx->amount,0,',','.') }}
+                    </td>
+                    <td style="padding:11px 10px;border-bottom:1px solid var(--border)">
+                        <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:{{ $trx->type==='pemasukan'?'var(--badge-in-bg)':'var(--badge-out-bg)' }};color:{{ $trx->type==='pemasukan'?'var(--badge-in-txt)':'var(--badge-out-txt)' }}">{{ ucfirst($trx->type) }}</span>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -173,9 +247,10 @@
 <script>
 const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
 const mutedColor = () => isDark() ? '#484F58' : '#9CA3AF';
-const gridColor = () => isDark() ? '#21262D' : '#E2E6F0';
-const cardBg = () => isDark() ? '#161B22' : '#ffffff';
+const gridColor  = () => isDark() ? '#21262D' : '#E2E6F0';
+const cardBg     = () => isDark() ? '#161B22' : '#ffffff';
 
+@if($categories->isNotEmpty())
 const pieChart = new Chart(document.getElementById('pieChart'), {
     type:'doughnut',
     data:{ labels:{!! $pieLabels !!}, datasets:[{ data:{!! $pieData !!}, backgroundColor:{!! $pieColors !!}, borderWidth:2, borderColor:cardBg(), hoverOffset:6 }] },
@@ -183,6 +258,7 @@ const pieChart = new Chart(document.getElementById('pieChart'), {
         plugins:{ legend:{ position:'right', labels:{ font:{family:'Poppins',size:11}, padding:12, boxWidth:12, color:mutedColor() } },
         tooltip:{ callbacks:{ label: ctx=>' Rp '+ctx.parsed.toLocaleString('id-ID') } } } }
 });
+@endif
 
 const barChart = new Chart(document.getElementById('barChart'), {
     type:'bar',
@@ -197,15 +273,17 @@ const barChart = new Chart(document.getElementById('barChart'), {
                  y:{ grid:{color:gridColor()}, ticks:{font:{family:'Poppins',size:10},color:mutedColor(),callback:val=>'Rp '+(val/1000000).toFixed(1)+'jt'} } } }
 });
 
-// Update chart warna saat toggle
 document.addEventListener('themeChanged', () => {
+    @if($categories->isNotEmpty())
     pieChart.data.datasets[0].borderColor = cardBg();
     pieChart.options.plugins.legend.labels.color = mutedColor();
+    pieChart.update();
+    @endif
     barChart.options.plugins.legend.labels.color = mutedColor();
     barChart.options.scales.x.ticks.color = mutedColor();
     barChart.options.scales.y.ticks.color = mutedColor();
     barChart.options.scales.y.grid.color = gridColor();
-    pieChart.update(); barChart.update();
+    barChart.update();
 });
 </script>
 </x-spendwise>

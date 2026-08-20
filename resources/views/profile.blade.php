@@ -206,6 +206,31 @@
                         @error('email')<p class="sw-error">{{ $message }}</p>@enderror
                     </div>
                 </div>
+                <div class="sw-form-group" style="margin-top:4px">
+                    <label class="sw-label">
+                        Tanggal Gajian
+                        <span style="color:var(--text-muted)">(opsional)</span>
+                    </label>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <select name="payday_date" class="sw-select" style="max-width:200px">
+                            <option value="">— Tidak ada / Bulanan biasa —</option>
+                            @for($d = 1; $d <= 28; $d++)
+                                <option value="{{ $d }}" {{ old('payday_date', $user->payday_date) == $d ? 'selected' : '' }}>
+                                    Tanggal {{ $d }}
+                                </option>
+                            @endfor
+                        </select>
+                        @if($user->payday_date)
+                            <span style="font-size:12px;color:var(--success)">
+                                ✓ Aktif — Budget direset tiap tgl {{ $user->payday_date }}
+                            </span>
+                        @endif
+                    </div>
+                    <p style="font-size:11px;color:var(--text-muted);margin-top:5px">
+                        Setelah diset, pengeluaran dan pie chart akan dihitung dari tanggal gajian ke tanggal gajian berikutnya. Budget kategori otomatis direset setiap periode baru dimulai.
+                    </p>
+                    @error('payday_date')<p class="sw-error">{{ $message }}</p>@enderror
+                </div>
 
                 <button type="submit" class="btn-save">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

@@ -20,48 +20,32 @@ class ProfileController extends Controller
     }
 
     public function update(Request $request)
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    $request->validate([
-        'name'   => 'required|string|max:255',
-        'email'  => 'required|email|unique:users,email,'.$user->id,
-        'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-    ]);
-
-    if ($request->hasFile('avatar')) {
-        $file = $request->file('avatar');
-
-        // Debug — cek file masuk
-        \Log::info('Avatar upload:', [
-            'original' => $file->getClientOriginalName(),
-            'size'     => $file->getSize(),
-            'valid'    => $file->isValid(),
+        $request->validate([
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email|unique:users,email,' . $user->id,
+            'avatar'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'payday_date'  => 'nullable|integer|min:1|max:28',
         ]);
 
-        // Hapus foto lama
-        if ($user->getRawOriginal('avatar')) {
-            \Storage::disk('public')->delete($user->getRawOriginal('avatar'));
+        if ($request->hasFile('avatar')) {
+            if ($user->getRawOriginal('avatar')) {
+                Storage::disk('public')->delete($user->getRawOriginal('avatar'));
+            }
+            $path = $request->file('avatar')->store('avatars', 'public');
+            \DB::table('users')->where('id', $user->id)->update(['avatar' => $path]);
         }
 
-        // Simpan file
-        $path = $file->store('avatars', 'public');
+        \DB::table('users')->where('id', $user->id)->update([
+            'name'        => $request->name,
+            'email'       => $request->email,
+            'payday_date' => $request->payday_date ?: null,
+        ]);
 
-        \Log::info('Avatar saved to: '.$path);
-
-        // Update pakai query builder langsung (bypass model)
-        \DB::table('users')->where('id', $user->id)->update(['avatar' => $path]);
-
-        \Log::info('DB updated for user: '.$user->id);
+        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
     }
-
-    \DB::table('users')->where('id', $user->id)->update([
-        'name'  => $request->name,
-        'email' => $request->email,
-    ]);
-
-    return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
-}
 
     public function updatePassword(Request $request)
     {
